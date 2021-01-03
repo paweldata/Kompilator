@@ -1,6 +1,11 @@
 %{
 #include <string>
 
+#include "src/Parameters.h"
+#include "src/CodeGenerator.h"
+
+extern FILE *yyin;
+
 int yylex(void);
 void yyerror(const char *) {};
 %}
@@ -97,6 +102,13 @@ identifier:
 
 %%
 
-int main() {
-    return yyparse();
+int main(int argc, char** argv) {
+    Parameters param(argc, argv);
+    param.checkCorrectness();
+
+    yyin = param.getInput();
+    CodeGenerator codeGenerator(param.getOutput());
+
+    yyparse();
+    return 0;
 }

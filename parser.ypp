@@ -1,0 +1,102 @@
+%{
+#include <string>
+
+int yylex(void);
+void yyerror(const char *) {};
+%}
+
+%define api.value.type {std::string}
+
+%start program
+
+%token DECLARE _BEGIN END
+%token READ WRITE
+%token IF THEN ELSE ENDIF
+%token WHILE DO ENDWHILE
+%token REPEAT UNTIL
+%token FOR FROM TO DOWNTO ENDFOR
+
+%left PLUS MINUS MULTIPLY DIVIDE MODULO
+
+%token ASSIGN
+%token EQ NE LT GT LE GE
+
+%token LBRACKET RBRACKET SEMICOLON COLON COMMA
+
+%token NUM
+%token PIDENTIFIER
+
+%token INVALIDCHAR INFCOMMENT
+%%
+
+program:
+    DECLARE declarations _BEGIN commands END
+|   _BEGIN commands END
+;
+
+declarations:
+    declarations COMMA declaration
+|   declarations COMMA arrayDeclaration
+|   declaration
+|   arrayDeclaration
+;
+
+declaration:
+    PIDENTIFIER
+;
+
+arrayDeclaration:
+    PIDENTIFIER LBRACKET NUM COLON NUM RBRACKET
+;
+
+commands:
+    commands command
+|   command
+;
+
+command:
+    identifier ASSIGN expression SEMICOLON
+|   IF condition THEN commands ELSE commands ENDIF
+|   IF condition THEN commands ENDIF
+|   WHILE condition DO commands ENDWHILE
+|   REPEAT commands UNTIL condition SEMICOLON
+|   FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
+|   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
+|   READ identifier SEMICOLON
+|   WRITE value SEMICOLON
+;
+
+expression:
+    value
+|   value PLUS value
+|   value MINUS value
+|   value MULTIPLY value
+|   value DIVIDE value
+|   value MODULO value
+;
+
+condition:
+    value EQ value
+|   value NE value
+|   value LT value
+|   value GT value
+|   value LE value
+|   value GE value
+;
+
+value:
+    NUM
+|   identifier
+;
+
+identifier:
+    PIDENTIFIER
+|   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET
+|   PIDENTIFIER LBRACKET NUM RBRACKET
+;
+
+%%
+
+int main() {
+    return yyparse();
+}

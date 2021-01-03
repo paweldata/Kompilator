@@ -1,5 +1,7 @@
 %option noyywrap
 %{
+#include <string>
+#include <iostream>
 #include "parser.tab.hpp"
 
 int yylex();
@@ -10,7 +12,7 @@ int yylex();
 
 <INITIAL>{
 "DECLARE"           { return DECLARE; }
-"BEGIN"             { return BEGIN; }
+"BEGIN"             { return _BEGIN; }
 "END"               { return END; }
 
 "READ"              { return READ; }
@@ -57,8 +59,8 @@ int yylex();
 
 "["                 { BEGIN(COMMENT); }
 
-[0-9]+              { yylval = atoi(yytext); return NUM; }
-[_a-z]+             { yylval = new std::string(yytext); return PIDENTIFIER; }
+[0-9]+              { yylval = yytext; return NUM; }
+[_a-z]+             { yylval = yytext; return PIDENTIFIER; }
 
 [ \r\t\n]           ;
 .                   { return INVALIDCHAR; }

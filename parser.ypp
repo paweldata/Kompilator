@@ -3,8 +3,10 @@
 
 #include "src/Parameters.h"
 #include "src/CodeGenerator.h"
+#include "src/CodeWriter.h"
 
 extern FILE *yyin;
+CodeGenerator* codeGenerator;
 
 int yylex(void);
 void yyerror(const char *) {};
@@ -105,10 +107,11 @@ identifier:
 int main(int argc, char** argv) {
     Parameters param(argc, argv);
     param.checkCorrectness();
+    codeGenerator = new CodeGenerator();
 
     yyin = param.getInput();
-    CodeGenerator codeGenerator(param.getOutput());
-
     yyparse();
+
+    CodeWriter().writeToFile(param.getOutput());
     return 0;
 }

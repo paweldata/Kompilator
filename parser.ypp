@@ -4,9 +4,11 @@
 #include "src/Parameters.h"
 #include "src/CodeGenerator.h"
 #include "src/CodeWriter.h"
+#include "src/Memory.h"
 
 extern FILE *yyin;
 CodeGenerator* codeGenerator;
+Memory* memory;
 
 int yylex(void);
 void yyerror(const char *) {};
@@ -107,7 +109,9 @@ identifier:
 int main(int argc, char** argv) {
     Parameters param(argc, argv);
     param.checkCorrectness();
-    codeGenerator = new CodeGenerator();
+
+    memory = new Memory();
+    codeGenerator = new CodeGenerator(memory);
 
     yyin = param.getInput();
     yyparse();

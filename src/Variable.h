@@ -7,13 +7,14 @@
 class Variable {
 public:
     Variable() = default;
-    Variable(std::string name, uint address, uint first);
+    Variable(std::string name, uint address, uint start, uint end);
     uint getAddress();
 
 private:
     std::string name;
     uint address;
-    uint first;
+    uint start;
+    uint end;
 };
 
 #endif //VARIABLE_H

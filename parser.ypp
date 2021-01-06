@@ -11,7 +11,7 @@ CodeGenerator* codeGenerator;
 Memory* memory;
 
 int yylex(void);
-void yyerror(const char *) {};
+void yyerror(std::string error);
 %}
 
 %define api.value.type {std::string}
@@ -51,11 +51,11 @@ declarations:
 ;
 
 declaration:
-    PIDENTIFIER
+    PIDENTIFIER                                      { memory->setVariable($1); }
 ;
 
 arrayDeclaration:
-    PIDENTIFIER LBRACKET NUM COLON NUM RBRACKET
+    PIDENTIFIER LBRACKET NUM COLON NUM RBRACKET      { memory->setArray($1, std::stoi($3), std::stoi($5)); }
 ;
 
 commands:
@@ -106,6 +106,11 @@ identifier:
 
 %%
 
+void yyerror(std::string error) {
+    printf("%s\n", error.c_str());
+    exit(1);
+}
+
 int main(int argc, char** argv) {
     Parameters param(argc, argv);
     param.checkCorrectness();
@@ -114,7 +119,12 @@ int main(int argc, char** argv) {
     codeGenerator = new CodeGenerator(memory);
 
     yyin = param.getInput();
-    yyparse();
+
+    try {
+        yyparse();
+    } catch(std::string error) {
+        yyerror(error);
+    }
 
     CodeWriter().writeToFile(param.getOutput());
     return 0;

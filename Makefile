@@ -1,5 +1,7 @@
-all: parser lexer CodeGenerator.o CodeWriter.o Command.o Variable.o Memory.o
-	g++ -o compiler parser.tab.cpp lex.yy.c -lfl CodeGenerator.o CodeWriter.o Command.o Variable.o Memory.o
+all: compile clean
+
+compile: parser lexer CodeGenerator.o CodeWriter.o Command.o Variable.o Memory.o
+	g++ -g3 -o compiler parser.tab.cpp lex.yy.c -lfl CodeGenerator.o CodeWriter.o Command.o Variable.o Memory.o
 
 lexer:
 	flex lexer.l

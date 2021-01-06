@@ -1,8 +1,11 @@
+#include <assert.h>
+#include <algorithm>
+
 #include "Memory.h"
 
 Memory::Memory() {
     this->variables = std::map<std::string, Variable>();
-    this->registers = std::vector<int>(REGISTERSNUMBER, -1);
+    this->registers = std::vector<Register>(REGISTERSNUMBER, Register{-1, false});
     this->freeMemPtr = 0;
 }
 
@@ -22,6 +25,22 @@ void Memory::setArray(std::string name, uint start, uint end) {
     this->checkArraySize(start, end);
     this->variables[name] = Variable(name, this->freeMemPtr, start, end);
     this->freeMemPtr += end - start + 1;
+}
+
+char Memory::getFreeRegister() {
+    for (int i = 0; i < REGISTERSNUMBER; i++)
+        if (not this->registers[i].isUsed) {
+            this->registers[i].isUsed = true;
+            return (char)('a' + i);
+        }
+    throw "Error: there is no free register";
+}
+
+void Memory::freeRegister(char reg) {
+    uint regNumber = (uint)(reg - 'a');
+    assert(regNumber < REGISTERSNUMBER);
+    assert(this->registers[regNumber].isUsed == true);
+    this->registers[regNumber].isUsed = false;
 }
 
 void Memory::checkIfVariableNotExitsts(std::string name) {

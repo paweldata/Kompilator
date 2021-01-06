@@ -9,6 +9,11 @@
 
 constexpr uint REGISTERSNUMBER = 6;
 
+struct Register {
+    int value;
+    bool isUsed;
+};
+
 class Memory {
 public:
     Memory();
@@ -16,13 +21,16 @@ public:
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
 
+    char getFreeRegister();
+    void freeRegister(char reg);
+
 private:
     void checkIfVariableNotExitsts(std::string name);
     void checkIfVariableAlreadyExists(std::string name);
     void checkArraySize(uint start, uint end);
 
     std::map<std::string, Variable> variables;
-    std::vector<int> registers;
+    std::vector<Register> registers;
     uint freeMemPtr;
 };
 

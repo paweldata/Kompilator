@@ -99,7 +99,7 @@ value:
 ;
 
 identifier:
-    PIDENTIFIER
+    PIDENTIFIER                                      { codeGenerator->getVariable($1); }
 |   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET
 |   PIDENTIFIER LBRACKET NUM RBRACKET
 ;

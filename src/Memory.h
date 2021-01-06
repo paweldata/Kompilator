@@ -3,8 +3,11 @@
 
 
 #include <map>
+#include <vector>
 
 #include "Variable.h"
+
+constexpr uint REGISTERSNUMBER = 6;
 
 class Memory {
 public:
@@ -19,6 +22,7 @@ private:
     void checkArraySize(uint start, uint end);
 
     std::map<std::string, Variable> variables;
+    std::vector<int> registers;
     uint freeMemPtr;
 };
 

@@ -2,6 +2,7 @@
 
 Memory::Memory() {
     this->variables = std::map<std::string, Variable>();
+    this->registers = std::vector<int>(REGISTERSNUMBER, -1);
     this->freeMemPtr = 0;
 }
 
@@ -25,12 +26,12 @@ void Memory::setArray(std::string name, uint start, uint end) {
 
 void Memory::checkIfVariableNotExitsts(std::string name) {
     if (this->variables.find(name) == this->variables.end())
-        throw (std::string) name + " not initialized";
+        throw (std::string) name + " not defined";
 }
 
 void Memory::checkIfVariableAlreadyExists(std::string name) {
     if (this->variables.find(name) != this->variables.end())
-        throw (std::string) name + " already initialized";
+        throw (std::string) name + " already defined";
 }
 
 void Memory::checkArraySize(uint start, uint end) {

@@ -36,6 +36,18 @@ Variable* Memory::getArrayVariable(std::string name, std::string index) {
     return var;
 }
 
+Variable* Memory::getConstant(uint value) {
+    for (Constant* constant : this->constants)
+        if (constant->getValue() == value)
+            return constant;
+
+    Constant* constant = new Constant(value, this->freeMemPtr);
+    this->freeMemPtr++;
+
+    this->constants.push_back(constant);
+    return constant;
+}
+
 void Memory::setVariable(std::string name) {
     this->checkIfVariableAlreadyExists(name);
     this->variables[name] = new Variable(name, this->freeMemPtr, 0, 0);

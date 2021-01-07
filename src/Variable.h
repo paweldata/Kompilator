@@ -23,6 +23,7 @@ private:
     uint start;
     uint end;
     bool initialized;
+
     bool isArray;
     bool isArrayWithIndex;
     Variable* index;

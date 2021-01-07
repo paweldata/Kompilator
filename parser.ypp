@@ -41,7 +41,7 @@ void yyerror(std::string error);
 
 %token INVALIDCHAR INFCOMMENT
 
-%type <var> identifier
+%type <var> identifier value
 
 %%
 
@@ -101,7 +101,7 @@ condition:
 ;
 
 value:
-    NUM
+    NUM                                             { $$ = memory->getConstant($1); }
 |   identifier
 ;
 

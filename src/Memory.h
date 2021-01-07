@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Variable.h"
+#include "Constant.h"
 
 constexpr uint REGISTERSNUMBER = 6;
 
@@ -20,6 +21,7 @@ public:
     Variable* getVariable(std::string name);
     Variable* getArrayVariable(std::string name, uint index);
     Variable* getArrayVariable(std::string name, std::string index);
+    Variable* getConstant(uint value);
 
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
@@ -33,6 +35,7 @@ private:
     void checkArraySize(uint start, uint end);
 
     std::map<std::string, Variable*> variables;
+    std::vector<Constant*> constants;
     std::vector<Register> registers;
     uint freeMemPtr;
 };

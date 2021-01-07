@@ -22,7 +22,7 @@ public:
 
 private:
     void setRegisterValue(std::string reg, uint value);
-    int getVarInRegisterAndGenerateCode(Variable variable);
+    int getVarInRegisterAndGenerateCode(Variable* variable);
 
     Memory* memory;
     std::vector<Command*> commands;

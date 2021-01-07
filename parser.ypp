@@ -71,7 +71,7 @@ command:
 |   FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
 |   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
 |   READ identifier SEMICOLON                       { codeGenerator->readVariable($2); }
-|   WRITE value SEMICOLON
+|   WRITE value SEMICOLON                           { codeGenerator->writeVariable($2); }
 ;
 
 expression:

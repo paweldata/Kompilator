@@ -17,7 +17,7 @@ struct Register {
 class Memory {
 public:
     Memory();
-    Variable getVariable(std::string name);
+    Variable* getVariable(std::string name);
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
 
@@ -29,7 +29,7 @@ private:
     void checkIfVariableAlreadyExists(std::string name);
     void checkArraySize(uint start, uint end);
 
-    std::map<std::string, Variable> variables;
+    std::map<std::string, Variable*> variables;
     std::vector<Register> registers;
     uint freeMemPtr;
 };

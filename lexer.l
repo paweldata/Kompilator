@@ -59,8 +59,8 @@ int yylex();
 
 "["                 { BEGIN(COMMENT); }
 
-[0-9]+              { yylval = yytext; return NUM; }
-[_a-z]+             { yylval = yytext; return PIDENTIFIER; }
+[0-9]+              { yylval.num = std::stoi(yytext); return NUM; }
+[_a-z]+             { yylval.str = new std::string(yytext); return PIDENTIFIER; }
 
 [ \r\t\n]           ;
 .                   { return INVALIDCHAR; }

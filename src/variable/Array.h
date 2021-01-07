@@ -11,7 +11,7 @@ class Array : public Variable {
 public:
     Array(std::string name, uint address, uint start, uint end);
     Variable* getOneAddress(uint index);
-    Variable* getOneAddress(std::string index);
+    Variable* getOneAddress(Variable* var);
 
 private:
     void checkSize();

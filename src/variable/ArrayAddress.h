@@ -4,7 +4,7 @@
 
 #include "Variable.h"
 
-class ArrayAddress : Variable {
+class ArrayAddress : public Variable {
 public:
     ArrayAddress(std::string name, uint address, Variable* index);
     Variable* getIndex();

@@ -24,7 +24,15 @@ Variable* Memory::getArrayVariable(std::string name, uint index) {
 }
 
 Variable* Memory::getArrayVariable(std::string name, std::string index) {
-    
+    this->checkIfVariableNotExitsts(name);
+    Variable* var = this->variables[name];
+
+    if (Array* arr = static_cast<Array*>(var)) {
+        this->checkIfVariableNotExitsts(index);
+        Variable* var = this->variables[index];
+        return arr->getOneAddress(var);
+    }
+    throw (std::string) var->getName() + " is not an array";
 }
 
 Variable* Memory::getConstant(uint value) {

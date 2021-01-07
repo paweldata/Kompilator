@@ -15,6 +15,8 @@ public:
     void readVariable(Variable* var);
     void writeVariable(Variable* var);
 
+    void setConstValue(Variable* var);
+
     void endGenerateCode();
     std::string getCode();
 

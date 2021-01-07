@@ -25,6 +25,23 @@ void CodeGenerator::writeVariable(Variable* var) {
     memory->freeRegister(reg);
 }
 
+void CodeGenerator::setConstValue(Variable* var) {
+    Constant* constant = static_cast<Constant*>(var);
+    uint address = constant->getAddress();
+    uint value = constant->getValue();
+
+    std::string regWithValue = memory->getFreeRegister();
+    std::string regWithAddress = memory->getFreeRegister();
+    std::string param = regWithValue + " " + regWithAddress;
+
+    this->setRegisterValue(regWithValue, value);
+    this->setRegisterValue(regWithAddress, address);
+    this->commands.push_back(new Command(STORE, param));
+
+    memory->freeRegister(regWithValue);
+    memory->freeRegister(regWithAddress);
+}
+
 void CodeGenerator::setRegisterValue(std::string reg, uint value) {
     this->commands.push_back(new Command(RESET, reg));
     std::string binary = this->decToBin(value);

@@ -1,4 +1,5 @@
 #include "Array.h"
+#include "ArrayAddress.h"
 
 Array::Array(std::string name, uint address, uint start, uint end) 
     : Variable(name, address) {
@@ -22,8 +23,11 @@ Variable* Array::getOneAddress(uint index) {
     return var;
 }
 
-Variable* Array::getOneAddress(std::string index) {
-    
+Variable* Array::getOneAddress(Variable* var) {
+    std::string newName = this->name + "(" + var->getName() + ")";
+    Variable* newVar = new ArrayAddress(newName, this->address, var);
+    newVar->initialize();
+    return newVar;
 }
 
 void Array::checkSize() {

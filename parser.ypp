@@ -101,7 +101,7 @@ condition:
 ;
 
 value:
-    NUM                                             { $$ = memory->getConstant($1); }
+    NUM                                             { $$ = memory->getConstant($1); codeGenerator->setConstValue($$); }
 |   identifier
 ;
 

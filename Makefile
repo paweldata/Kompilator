@@ -10,16 +10,16 @@ parser:
 	bison -d parser.ypp
 
 CodeGenerator.o: src/CodeGenerator.cpp src/CodeGenerator.h
-	g++ -c src/CodeGenerator.cpp -o CodeGenerator.o
+	g++ -g3 -c src/CodeGenerator.cpp -o CodeGenerator.o
 
 Command.o: src/Command.cpp src/Command.h
-	g++ -c src/Command.cpp -o Command.o
+	g++ -g3 -c src/Command.cpp -o Command.o
 
 Memory.o: src/Memory.cpp src/Memory.h
-	g++ -c src/Memory.cpp -o Memory.o
+	g++ -g3 -c src/Memory.cpp -o Memory.o
 
 Variable.o: src/Variable.cpp src/Variable.h
-	g++ -c src/Variable.cpp -o Variable.o
+	g++ -g3 -c src/Variable.cpp -o Variable.o
 
 clean:
 	rm -f parser.tab.* lex.* *.o

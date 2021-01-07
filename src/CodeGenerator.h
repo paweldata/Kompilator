@@ -14,15 +14,13 @@ public:
 
     void readVariable(std::string name);
     void writeVariable(std::string name);
-
-    void getVariable(std::string name);
+    void initializeVariable(std::string name, uint value);
 
     void endGenerateCode();
     std::string getCode();
 
 private:
     void setRegisterValue(std::string reg, uint value);
-    int getVarInRegisterAndGenerateCode(Variable* variable);
 
     Memory* memory;
     std::vector<Command*> commands;

@@ -4,11 +4,6 @@ CodeGenerator::CodeGenerator(Memory* memory) {
     this->memory = memory;
 }
 
-void CodeGenerator::getVariable(std::string name) {
-    Variable* var = this->memory->getVariable(name);
-    this->getVarInRegisterAndGenerateCode(var);
-}
-
 void CodeGenerator::readVariable(std::string name) {
     Variable* var = this->memory->getVariable(name);
     var->initialize();
@@ -30,6 +25,19 @@ void CodeGenerator::writeVariable(std::string name) {
     this->setRegisterValue(reg, address);
 
     this->commands.push_back(new Command(PUT, reg));
+
+    memory->freeRegister(reg);
+}
+
+void CodeGenerator::initializeVariable(std::string name, uint value) {
+    Variable* var = this->memory->getVariable(name);
+    var->initialize();
+    uint address = var->getAddress();
+    std::string reg = memory->getFreeRegister();
+
+    this->setRegisterValue(reg, address);
+
+    this->commands.push_back(new Command(STORE, reg));
 
     memory->freeRegister(reg);
 }
@@ -60,10 +68,4 @@ std::string CodeGenerator::getCode() {
     for (Command* command : this->commands)
         code.append(command->parseToString() + "\n");
     return code;
-}
-
-int CodeGenerator::getVarInRegisterAndGenerateCode(Variable* variable) {
-    // uint address = variable.getAddress();
-    // return register and generate code
-    return 0;
 }

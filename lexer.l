@@ -2,6 +2,8 @@
 %{
 #include <string>
 #include <iostream>
+
+#include "src/Variable.h"
 #include "parser.tab.hpp"
 
 int yylex();

@@ -4,6 +4,7 @@
 #include "src/Parameters.h"
 #include "src/CodeGenerator.h"
 #include "src/Memory.h"
+#include "src/Variable.h"
 
 extern FILE *yyin;
 CodeGenerator* codeGenerator;
@@ -14,8 +15,9 @@ void yyerror(std::string error);
 %}
 
 %union {
-	uint num;
-	std::string* str;
+    uint num;
+    std::string* str;
+    Variable* var;
 }
 
 %start program
@@ -38,6 +40,8 @@ void yyerror(std::string error);
 %token <str> PIDENTIFIER
 
 %token INVALIDCHAR INFCOMMENT
+
+%type <var> identifier
 
 %%
 
@@ -102,7 +106,7 @@ value:
 ;
 
 identifier:
-    PIDENTIFIER
+    PIDENTIFIER                                     { $$ = memory->getVariable(*$1); }
 |   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET
 |   PIDENTIFIER LBRACKET NUM RBRACKET
 ;

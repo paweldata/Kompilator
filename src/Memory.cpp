@@ -14,6 +14,28 @@ Variable* Memory::getVariable(std::string name) {
     return this->variables[name];
 }
 
+Variable* Memory::getArrayVariable(std::string name, uint index) {
+    this->checkIfVariableNotExitsts(name);
+    Variable* array = this->variables[name];
+
+    std::string newName = name + "(" + std::to_string(index) + ")";
+    uint newIndex = array->getAddress(index);
+    return new Variable(newName, newIndex, 0, 0);
+}
+
+Variable* Memory::getArrayVariable(std::string name, std::string index) {
+    this->checkIfVariableNotExitsts(name);
+    this->checkIfVariableNotExitsts(index);
+    Variable* array = this->variables[name];
+    Variable* indexVar = this->variables[index];
+
+    std::string newName = name + "(" + index + ")";
+    uint newAddress = array->getAddress();
+    Variable* var = new Variable(newName, newAddress, 0, 0);
+    var->setToArrayWithIndex(indexVar);
+    return var;
+}
+
 void Memory::setVariable(std::string name) {
     this->checkIfVariableAlreadyExists(name);
     this->variables[name] = new Variable(name, this->freeMemPtr, 0, 0);
@@ -24,6 +46,7 @@ void Memory::setArray(std::string name, uint start, uint end) {
     this->checkIfVariableAlreadyExists(name);
     this->checkArraySize(start, end);
     this->variables[name] = new Variable(name, this->freeMemPtr, start, end);
+    this->variables[name]->setToArray();
     this->freeMemPtr += end - start + 1;
 }
 

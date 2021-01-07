@@ -107,8 +107,8 @@ value:
 
 identifier:
     PIDENTIFIER                                     { $$ = memory->getVariable(*$1); }
-|   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET
-|   PIDENTIFIER LBRACKET NUM RBRACKET
+|   PIDENTIFIER  LBRACKET PIDENTIFIER RBRACKET      { $$ = memory->getArrayVariable(*$1, *$3); }
+|   PIDENTIFIER LBRACKET NUM RBRACKET               { $$ = memory->getArrayVariable(*$1, $3); }
 ;
 
 %%

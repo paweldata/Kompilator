@@ -18,6 +18,9 @@ class Memory {
 public:
     Memory();
     Variable* getVariable(std::string name);
+    Variable* getArrayVariable(std::string name, uint index);
+    Variable* getArrayVariable(std::string name, std::string index);
+
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
 

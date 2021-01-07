@@ -14,7 +14,6 @@ public:
 
     void readVariable(std::string name);
     void writeVariable(std::string name);
-    void initializeVariable(std::string name, uint value);
 
     void endGenerateCode();
     std::string getCode();

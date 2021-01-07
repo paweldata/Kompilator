@@ -29,19 +29,6 @@ void CodeGenerator::writeVariable(std::string name) {
     memory->freeRegister(reg);
 }
 
-void CodeGenerator::initializeVariable(std::string name, uint value) {
-    Variable* var = this->memory->getVariable(name);
-    var->initialize();
-    uint address = var->getAddress();
-    std::string reg = memory->getFreeRegister();
-
-    this->setRegisterValue(reg, address);
-
-    this->commands.push_back(new Command(STORE, reg));
-
-    memory->freeRegister(reg);
-}
-
 void CodeGenerator::setRegisterValue(std::string reg, uint value) {
     this->commands.push_back(new Command(RESET, reg));
 

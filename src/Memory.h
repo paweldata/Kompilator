@@ -5,8 +5,8 @@
 #include <map>
 #include <vector>
 
-#include "Variable.h"
-#include "Constant.h"
+#include "variable/Variable.h"
+#include "variable/Constant.h"
 
 constexpr uint REGISTERSNUMBER = 6;
 

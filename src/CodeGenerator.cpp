@@ -4,40 +4,30 @@ CodeGenerator::CodeGenerator(Memory* memory) {
     this->memory = memory;
 }
 
-void CodeGenerator::readVariable(std::string name) {
-    Variable* var = this->memory->getVariable(name);
+void CodeGenerator::readVariable(Variable* var) {
     var->initialize();
     uint address = var->getAddress();
     std::string reg = memory->getFreeRegister();
 
     this->setRegisterValue(reg, address);
-
     this->commands.push_back(new Command(GET, reg));
 
     memory->freeRegister(reg);
 }
 
-void CodeGenerator::writeVariable(std::string name) {
-    Variable* var = this->memory->getVariable(name);
+void CodeGenerator::writeVariable(Variable* var) {
     uint address = var->getAddress();
     std::string reg = memory->getFreeRegister();
 
     this->setRegisterValue(reg, address);
-
     this->commands.push_back(new Command(PUT, reg));
-
+    
     memory->freeRegister(reg);
 }
 
 void CodeGenerator::setRegisterValue(std::string reg, uint value) {
     this->commands.push_back(new Command(RESET, reg));
-
-    std::string binary;
-
-    while (value > 0) {
-        binary = (value % 2 == 0 ? "0" : "1") + binary;
-        value /= 2;
-    }
+    std::string binary = this->decToBin(value);
 
     for (char c : binary) {
         this->commands.push_back(new Command(SHL, reg));
@@ -55,4 +45,13 @@ std::string CodeGenerator::getCode() {
     for (Command* command : this->commands)
         code.append(command->parseToString() + "\n");
     return code;
+}
+
+std::string CodeGenerator::decToBin(uint value) {
+    std::string binary;
+    while (value > 0) {
+        binary = (value % 2 == 0 ? "0" : "1") + binary;
+        value /= 2;
+    }
+    return binary;
 }

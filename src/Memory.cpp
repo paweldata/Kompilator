@@ -2,6 +2,7 @@
 #include <algorithm>
 
 #include "Memory.h"
+#include "variable/Array.h"
 
 Memory::Memory() {
     this->variables = std::map<std::string, Variable*>();
@@ -16,49 +17,39 @@ Variable* Memory::getVariable(std::string name) {
 
 Variable* Memory::getArrayVariable(std::string name, uint index) {
     this->checkIfVariableNotExitsts(name);
-    Variable* array = this->variables[name];
+    Variable* var = this->variables[name];
 
-    std::string newName = name + "(" + std::to_string(index) + ")";
-    uint newIndex = array->getAddress(index);
-    return new Variable(newName, newIndex, 0, 0);
+    if (Array* arr = static_cast<Array*>(var))
+        return arr->getOneAddress(index);
+
+    throw (std::string) var->getName() + " is not an array";
 }
 
 Variable* Memory::getArrayVariable(std::string name, std::string index) {
-    this->checkIfVariableNotExitsts(name);
-    this->checkIfVariableNotExitsts(index);
-    Variable* array = this->variables[name];
-    Variable* indexVar = this->variables[index];
-
-    std::string newName = name + "(" + index + ")";
-    uint newAddress = array->getAddress();
-    Variable* var = new Variable(newName, newAddress, 0, 0);
-    var->setToArrayWithIndex(indexVar);
-    return var;
+    
 }
 
 Variable* Memory::getConstant(uint value) {
     for (Constant* constant : this->constants)
         if (constant->getValue() == value)
             return constant;
-
+    
     Constant* constant = new Constant(value, this->freeMemPtr);
     this->freeMemPtr++;
-
     this->constants.push_back(constant);
     return constant;
 }
 
 void Memory::setVariable(std::string name) {
     this->checkIfVariableAlreadyExists(name);
-    this->variables[name] = new Variable(name, this->freeMemPtr, 0, 0);
+    this->variables[name] = new Variable(name, this->freeMemPtr);
     this->freeMemPtr++;
 }
 
 void Memory::setArray(std::string name, uint start, uint end) {
     this->checkIfVariableAlreadyExists(name);
     this->checkArraySize(start, end);
-    this->variables[name] = new Variable(name, this->freeMemPtr, start, end);
-    this->variables[name]->setToArray();
+    this->variables[name] = new Array(name, this->freeMemPtr, start, end);
     this->freeMemPtr += end - start + 1;
 }
 

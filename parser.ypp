@@ -4,7 +4,7 @@
 #include "src/Parameters.h"
 #include "src/CodeGenerator.h"
 #include "src/Memory.h"
-#include "src/Variable.h"
+#include "src/variable/Variable.h"
 
 extern FILE *yyin;
 CodeGenerator* codeGenerator;
@@ -78,8 +78,8 @@ command:
 |   REPEAT commands UNTIL condition SEMICOLON
 |   FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
 |   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
-|   READ identifier SEMICOLON                       { /*codeGenerator->readVariable($2);*/ }
-|   WRITE value SEMICOLON                           { /*codeGenerator->writeVariable($2);*/ }
+|   READ identifier SEMICOLON                       { codeGenerator->readVariable($2); }
+|   WRITE value SEMICOLON                           { codeGenerator->writeVariable($2); }
 ;
 
 expression:

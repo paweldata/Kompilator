@@ -12,14 +12,15 @@ class CodeGenerator {
 public:
     CodeGenerator(Memory* memory);
 
-    void readVariable(std::string name);
-    void writeVariable(std::string name);
+    void readVariable(Variable* var);
+    void writeVariable(Variable* var);
 
     void endGenerateCode();
     std::string getCode();
 
 private:
     void setRegisterValue(std::string reg, uint value);
+    std::string decToBin(uint value);
 
     Memory* memory;
     std::vector<Command*> commands;

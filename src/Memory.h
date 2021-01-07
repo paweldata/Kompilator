@@ -21,8 +21,8 @@ public:
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
 
-    char getFreeRegister();
-    void freeRegister(char reg);
+    std::string getFreeRegister();
+    void freeRegister(std::string reg);
 
 private:
     void checkIfVariableNotExitsts(std::string name);

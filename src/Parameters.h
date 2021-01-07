@@ -3,6 +3,7 @@
 
 
 #include <stdio.h>
+#include <fstream>
 
 class Parameters {
 public:
@@ -10,7 +11,7 @@ public:
         if (argc < 2)
             return;
         this->input = fopen(argv[1], "r");
-        this->output = fopen(argv[2], "w");
+        this->output = std::ofstream(argv[2]);
     }
 
     void checkCorrectness() {
@@ -20,21 +21,18 @@ public:
         }
     }
 
-    FILE* getInput() { return this->input; }
-    FILE* getOutput() {return this->output; }
+    FILE* input;
+    std::ofstream output; 
 
 private:
     bool areValid() const { 
-        return this->input != NULL && this->output != NULL;
+        return this->input != NULL && this->output.is_open();
     }
 
     static void showError() {
         printf("Give parameters:\n"
                "./compiler <input_filename> <output_filename>\n");
     }
-
-    FILE* input;
-    FILE* output;
 };
 
 

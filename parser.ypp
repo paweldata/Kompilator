@@ -3,7 +3,6 @@
 
 #include "src/Parameters.h"
 #include "src/CodeGenerator.h"
-#include "src/CodeWriter.h"
 #include "src/Memory.h"
 
 extern FILE *yyin;
@@ -39,7 +38,7 @@ void yyerror(std::string error);
 %%
 
 program:
-    DECLARE declarations _BEGIN commands END
+    DECLARE declarations _BEGIN commands END        { codeGenerator->endGenerateCode(); }
 |   _BEGIN commands END
 ;
 
@@ -71,7 +70,7 @@ command:
 |   REPEAT commands UNTIL condition SEMICOLON
 |   FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
 |   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
-|   READ identifier SEMICOLON
+|   READ identifier SEMICOLON                       { codeGenerator->readVariable($2); }
 |   WRITE value SEMICOLON
 ;
 
@@ -118,7 +117,7 @@ int main(int argc, char** argv) {
     memory = new Memory();
     codeGenerator = new CodeGenerator(memory);
 
-    yyin = param.getInput();
+    yyin = param.input;
 
     try {
         yyparse();
@@ -126,6 +125,7 @@ int main(int argc, char** argv) {
         yyerror(error);
     }
 
-    CodeWriter().writeToFile(param.getOutput());
+    std::string code = codeGenerator->getCode();
+    param.output << code;
     return 0;
 }

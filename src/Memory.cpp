@@ -27,17 +27,17 @@ void Memory::setArray(std::string name, uint start, uint end) {
     this->freeMemPtr += end - start + 1;
 }
 
-char Memory::getFreeRegister() {
+std::string Memory::getFreeRegister() {
     for (int i = 0; i < REGISTERSNUMBER; i++)
         if (not this->registers[i].isUsed) {
             this->registers[i].isUsed = true;
-            return (char)('a' + i);
+            return std::string(1, (char)('a' + i));
         }
     throw "Error: there is no free register";
 }
 
-void Memory::freeRegister(char reg) {
-    uint regNumber = (uint)(reg - 'a');
+void Memory::freeRegister(std::string reg) {
+    uint regNumber = (uint)(reg[0] - 'a');
     assert(regNumber < REGISTERSNUMBER);
     assert(this->registers[regNumber].isUsed == true);
     this->registers[regNumber].isUsed = false;

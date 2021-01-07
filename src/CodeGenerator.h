@@ -11,9 +11,17 @@
 class CodeGenerator {
 public:
     CodeGenerator(Memory* memory);
+
+    void readVariable(std::string name);
+    void writeVariable(std::string name);
+
     void getVariable(std::string name);
 
+    void endGenerateCode();
+    std::string getCode();
+
 private:
+    void setRegisterValue(std::string reg, uint value);
     int getVarInRegisterAndGenerateCode(Variable variable);
 
     Memory* memory;

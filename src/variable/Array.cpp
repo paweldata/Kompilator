@@ -5,11 +5,12 @@ Array::Array(std::string name, uint address, uint start, uint end)
     this->memory = std::map<uint, Variable*>();
     this->start = start;
     this->end = end;
+
+    this->checkSize();
 }
 
 Variable* Array::getOneAddress(uint index) {
-    if (index < this->start || index > this->end)
-        throw (std::string) "wrong index of an array " + this->name + ", index : " + std::to_string(index);
+    this->checkIndex(index);
     
     if (this->memory.find(index) != this->memory.end())
         return this->memory[index];
@@ -23,4 +24,14 @@ Variable* Array::getOneAddress(uint index) {
 
 Variable* Array::getOneAddress(std::string index) {
     
+}
+
+void Array::checkSize() {
+    if (this->start > this->end)
+        throw (std::string) "wrong array size";
+}
+
+void Array::checkIndex(uint index) {
+    if (index < this->start || index > this->end)
+        throw (std::string) "wrong index of an array " + this->name + ", index : " + std::to_string(index);
 }

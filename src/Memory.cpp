@@ -18,10 +18,8 @@ Variable* Memory::getVariable(std::string name) {
 Variable* Memory::getArrayVariable(std::string name, uint index) {
     this->checkIfVariableNotExitsts(name);
     Variable* var = this->variables[name];
-
     if (Array* arr = static_cast<Array*>(var))
         return arr->getOneAddress(index);
-
     throw (std::string) var->getName() + " is not an array";
 }
 
@@ -48,7 +46,6 @@ void Memory::setVariable(std::string name) {
 
 void Memory::setArray(std::string name, uint start, uint end) {
     this->checkIfVariableAlreadyExists(name);
-    this->checkArraySize(start, end);
     this->variables[name] = new Array(name, this->freeMemPtr, start, end);
     this->freeMemPtr += end - start + 1;
 }
@@ -77,9 +74,4 @@ void Memory::checkIfVariableNotExitsts(std::string name) {
 void Memory::checkIfVariableAlreadyExists(std::string name) {
     if (this->variables.find(name) != this->variables.end())
         throw (std::string) name + " already defined";
-}
-
-void Memory::checkArraySize(uint start, uint end) {
-    if (start > end)
-        throw (std::string) "wrong array size";
 }

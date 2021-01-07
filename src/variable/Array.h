@@ -14,6 +14,9 @@ public:
     Variable* getOneAddress(std::string index);
 
 private:
+    void checkSize();
+    void checkIndex(uint index);
+
     std::map<uint, Variable*> memory;
     uint start;
     uint end;

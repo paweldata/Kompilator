@@ -11,6 +11,8 @@ public:
     uint getValue();
 
 private:
+    void functionForDynamicCast() {};
+
     uint value;
 };
 

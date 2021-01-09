@@ -3,6 +3,7 @@
 
 #include "Memory.h"
 #include "variable/Array.h"
+#include "variable/SimpleVariable.h"
 
 Memory::Memory() {
     this->variables = std::map<std::string, Variable*>();
@@ -27,7 +28,7 @@ Variable* Memory::getArrayVariable(std::string name, std::string index) {
     this->checkIfVariableNotExitsts(name);
     Variable* var = this->variables[name];
 
-    if (Array* arr = static_cast<Array*>(var)) {
+    if (Array* arr = dynamic_cast<Array*>(var)) {
         this->checkIfVariableNotExitsts(index);
         Variable* var = this->variables[index];
         return arr->getOneAddress(var);
@@ -48,7 +49,7 @@ Variable* Memory::getConstant(uint value) {
 
 void Memory::setVariable(std::string name) {
     this->checkIfVariableAlreadyExists(name);
-    this->variables[name] = new Variable(name, this->freeMemPtr);
+    this->variables[name] = new SimpleVariable(name, this->freeMemPtr);
     this->freeMemPtr++;
 }
 

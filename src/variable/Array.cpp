@@ -1,5 +1,6 @@
 #include "Array.h"
 #include "ArrayAddress.h"
+#include "SimpleVariable.h"
 
 Array::Array(std::string name, uint address, uint start, uint end) 
     : Variable(name, address) {
@@ -18,7 +19,7 @@ Variable* Array::getOneAddress(uint index) {
     
     std::string newName = this->name + "(" + std::to_string(index) + ")";
     uint newAddress = this->address - this->start + index;
-    Variable* var = new Variable(newName, newAddress);
+    Variable* var = new SimpleVariable(newName, newAddress);
 
     var->initialize();
     this->memory[index] = var;

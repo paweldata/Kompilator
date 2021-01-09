@@ -17,6 +17,8 @@ private:
     void checkSize();
     void checkIndex(uint index);
 
+    void functionForDynamicCast() {};
+
     std::map<uint, Variable*> memory;
     uint start;
     uint end;

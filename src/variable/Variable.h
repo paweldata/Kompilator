@@ -14,6 +14,8 @@ public:
     std::string getName();
 
 protected:
+    virtual void functionForDynamicCast() = 0;
+
     std::string name;
     uint address;
     bool initialized;

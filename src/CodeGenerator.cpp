@@ -21,12 +21,12 @@ void CodeGenerator::writeVariable(Variable* var) {
 
     this->setRegisterValue(reg, address);
     this->commands.push_back(new Command(PUT, reg));
-    
+
     memory->freeRegister(reg);
 }
 
 void CodeGenerator::setConstValue(Variable* var) {
-    Constant* constant = static_cast<Constant*>(var);
+    Constant* constant = dynamic_cast<Constant*>(var);
     uint address = constant->getAddress();
     uint value = constant->getValue();
 

@@ -10,6 +10,8 @@ public:
     Variable* getIndex();
 
 private:
+    void functionForDynamicCast() {};
+
     Variable* index;
 };
 

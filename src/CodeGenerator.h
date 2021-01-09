@@ -29,6 +29,7 @@ public:
         Operations(CodeGenerator& code) : codeGen(code) {};
         std::string* add(Variable* var1, Variable* var2);
         std::string* sub(Variable* var1, Variable* var2);
+        std::string* mul(Variable* var1, Variable* var2);
 
     private:
         CodeGenerator& codeGen;

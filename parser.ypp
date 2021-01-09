@@ -87,7 +87,7 @@ expression:
     value                                           { $$ = codeGenerator->setVarToRegister($1); }
 |   value PLUS value                                { $$ = codeGenerator->doOperation()->add($1, $3); }
 |   value MINUS value                               { $$ = codeGenerator->doOperation()->sub($1, $3); }
-|   value MULTIPLY value
+|   value MULTIPLY value                            { $$ = codeGenerator->doOperation()->mul($1, $3); }
 |   value DIVIDE value
 |   value MODULO value
 ;

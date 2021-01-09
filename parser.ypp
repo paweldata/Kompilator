@@ -42,6 +42,7 @@ void yyerror(std::string error);
 %token INVALIDCHAR INFCOMMENT
 
 %type <var> identifier value
+%type <str> expression
 
 %%
 
@@ -71,7 +72,7 @@ commands:
 ;
 
 command:
-    identifier ASSIGN expression SEMICOLON
+    identifier ASSIGN expression SEMICOLON          { codeGenerator->assignValue($1, *$3); }
 |   IF condition THEN commands ELSE commands ENDIF
 |   IF condition THEN commands ENDIF
 |   WHILE condition DO commands ENDWHILE
@@ -83,7 +84,7 @@ command:
 ;
 
 expression:
-    value
+    value                                           { $$ = codeGenerator->setVarToRegister($1); }
 |   value PLUS value
 |   value MINUS value
 |   value MULTIPLY value

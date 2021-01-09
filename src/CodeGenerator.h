@@ -18,6 +18,9 @@ public:
 
     void setConstValue(Variable* var);
 
+    void assignValue(Variable* var, std::string reg);
+    std::string* setVarToRegister(Variable* var);
+
     void endGenerateCode();
     std::string getCode();
 
@@ -27,6 +30,8 @@ private:
 
     void readArrayAddress(ArrayAddress* arr);
     void writeArrayAddress(ArrayAddress* arr);
+    void assignArrayValue(ArrayAddress* arr, std::string reg);
+    std::string* setArrVarToRegister(ArrayAddress* arr);
 
     Memory* memory;
     std::vector<Command*> commands;

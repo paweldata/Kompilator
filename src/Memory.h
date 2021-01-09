@@ -29,6 +29,8 @@ public:
     std::string getFreeRegister();
     void freeRegister(std::string reg);
 
+    void assertFreeRegisters();
+
 private:
     void checkIfVariableNotExitsts(std::string name);
     void checkIfVariableAlreadyExists(std::string name);

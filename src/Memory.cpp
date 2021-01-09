@@ -71,8 +71,13 @@ std::string Memory::getFreeRegister() {
 void Memory::freeRegister(std::string reg) {
     uint regNumber = (uint)(reg[0] - 'a');
     assert(regNumber < REGISTERSNUMBER);
-    assert(this->registers[regNumber].isUsed == true);
+    assert(this->registers[regNumber].isUsed);
     this->registers[regNumber].isUsed = false;
+}
+
+void Memory::assertFreeRegisters() {
+    for (Register reg : this->registers)
+        assert(not reg.isUsed);
 }
 
 void Memory::checkIfVariableNotExitsts(std::string name) {

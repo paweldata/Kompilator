@@ -96,6 +96,7 @@ std::string* CodeGenerator::setVarToRegister(Variable* var) {
 
 void CodeGenerator::endGenerateCode() {
     this->commands.push_back(new Command(HALT, ""));
+    this->memory->assertFreeRegisters();
 }
 
 std::string CodeGenerator::getCode() {

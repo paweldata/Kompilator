@@ -19,6 +19,8 @@ Variable* Array::getOneAddress(uint index) {
     std::string newName = this->name + "(" + std::to_string(index) + ")";
     uint newAddress = this->address - this->start + index;
     Variable* var = new Variable(newName, newAddress);
+
+    var->initialize();
     this->memory[index] = var;
     return var;
 }
@@ -26,7 +28,6 @@ Variable* Array::getOneAddress(uint index) {
 Variable* Array::getOneAddress(Variable* var) {
     std::string newName = this->name + "(" + var->getName() + ")";
     Variable* newVar = new ArrayAddress(newName, this->address, var);
-    newVar->initialize();
     return newVar;
 }
 

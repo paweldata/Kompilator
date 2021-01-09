@@ -161,13 +161,13 @@ void CodeGenerator::assignArrayValue(ArrayAddress* arr, std::string reg) {
     std::string regWithAddress = memory->getFreeRegister();
     std::string regWithIndexValue = memory->getFreeRegister();
     std::string param = regWithIndexValue + " " + regWithAddress;
-    std::string storeParam = regWithIndexValue + " " + reg;
+    std::string storeParam = reg + " " + regWithIndexValue;
 
     this->setRegisterValue(regWithAddress, varAddress);
     this->commands.push_back(new Command(LOAD, param));
     this->setRegisterValue(regWithAddress, arrAddress);
     this->commands.push_back(new Command(ADD, param));
-    this->commands.push_back(new Command(STORE, param));
+    this->commands.push_back(new Command(STORE, storeParam));
 
     memory->freeRegister(regWithAddress);
     memory->freeRegister(regWithIndexValue);

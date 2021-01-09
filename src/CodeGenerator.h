@@ -7,6 +7,7 @@
 
 #include "Command.h"
 #include "Memory.h"
+#include "variable/ArrayAddress.h"
 
 class CodeGenerator {
 public:
@@ -23,6 +24,9 @@ public:
 private:
     void setRegisterValue(std::string reg, uint value);
     std::string decToBin(uint value);
+
+    void readArrayAddress(ArrayAddress* arr);
+    void writeArrayAddress(ArrayAddress* arr);
 
     Memory* memory;
     std::vector<Command*> commands;

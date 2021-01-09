@@ -5,6 +5,11 @@ CodeGenerator::CodeGenerator(Memory* memory) {
 }
 
 void CodeGenerator::readVariable(Variable* var) {
+    if (ArrayAddress* arrAddress = dynamic_cast<ArrayAddress*>(var)) {
+        this->readArrayAddress(arrAddress);
+        return;
+    }
+
     var->initialize();
     uint address = var->getAddress();
     std::string reg = memory->getFreeRegister();
@@ -16,6 +21,11 @@ void CodeGenerator::readVariable(Variable* var) {
 }
 
 void CodeGenerator::writeVariable(Variable* var) {
+    if (ArrayAddress* arrAddress = dynamic_cast<ArrayAddress*>(var)) {
+        this->writeArrayAddress(arrAddress);
+        return;
+    }
+
     uint address = var->getAddress();
     std::string reg = memory->getFreeRegister();
 
@@ -71,4 +81,42 @@ std::string CodeGenerator::decToBin(uint value) {
         value /= 2;
     }
     return binary;
+}
+
+void CodeGenerator::readArrayAddress(ArrayAddress* arr) {
+    Variable* var = arr->getIndex();
+    uint varAddress = var->getAddress();
+    uint arrAddress = arr->getAddress();
+
+    std::string regWithAddress = memory->getFreeRegister();
+    std::string regWithIndexValue = memory->getFreeRegister();
+    std::string param = regWithIndexValue + " " + regWithAddress;
+
+    this->setRegisterValue(regWithAddress, varAddress);
+    this->commands.push_back(new Command(LOAD, param));
+    this->setRegisterValue(regWithAddress, arrAddress);
+    this->commands.push_back(new Command(ADD, param));
+    this->commands.push_back(new Command(GET, regWithIndexValue));
+
+    memory->freeRegister(regWithAddress);
+    memory->freeRegister(regWithIndexValue);
+}
+
+void CodeGenerator::writeArrayAddress(ArrayAddress* arr) {
+    Variable* var = arr->getIndex();
+    uint varAddress = var->getAddress();
+    uint arrAddress = arr->getAddress();
+
+    std::string regWithAddress = memory->getFreeRegister();
+    std::string regWithIndexValue = memory->getFreeRegister();
+    std::string param = regWithIndexValue + " " + regWithAddress;
+
+    this->setRegisterValue(regWithAddress, varAddress);
+    this->commands.push_back(new Command(LOAD, param));
+    this->setRegisterValue(regWithAddress, arrAddress);
+    this->commands.push_back(new Command(ADD, param));
+    this->commands.push_back(new Command(PUT, regWithIndexValue));
+
+    memory->freeRegister(regWithAddress);
+    memory->freeRegister(regWithIndexValue);
 }

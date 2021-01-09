@@ -24,6 +24,17 @@ public:
     void endGenerateCode();
     std::string getCode();
 
+    class Operations {
+    public:
+        Operations(CodeGenerator& code) : codeGen(code) {};
+        std::string* add(Variable* var1, Variable* var2);
+
+    private:
+        CodeGenerator& codeGen;
+    };
+
+    const Operations* doOperation() { return &this->operations; };
+
 private:
     void setRegisterValue(std::string reg, uint value);
     std::string decToBin(uint value);
@@ -34,6 +45,7 @@ private:
     std::string* setArrVarToRegister(ArrayAddress* arr);
 
     Memory* memory;
+    Operations operations;
     std::vector<Command*> commands;
     std::stack<Command*> stack;
 };

@@ -49,6 +49,7 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     std::string counterReg = this->codeGen.memory->getFreeRegister();
     std::string reg1 = this->codeGen.memory->getFreeRegister();
     std::string* reg2 = this->codeGen.setVarToRegister(var1);
+    std::string resultReg = this->codeGen.memory->getFreeRegister();
 
     this->codeGen.commands.push_back(new Command(RESET, counterReg));
     this->codeGen.commands.push_back(new Command(RESET, reg1));
@@ -70,8 +71,15 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     this->codeGen.memory->freeRegister(*reg2);
     reg2 = this->codeGen.setVarToRegister(var2);
 
+    std::string checkZero = *reg2 + " 2";
+
+    // if var2 == 0, return 0
+    this->codeGen.commands.push_back(new Command(JZERO, checkZero));
+    this->codeGen.commands.push_back(new Command(JUMP, "3"));
+    this->codeGen.commands.push_back(new Command(RESET, resultReg));
+    this->codeGen.commands.push_back(new Command(JUMP, "19"));
+
     std::string tempSumReg = this->codeGen.memory->getFreeRegister();
-    std::string resultReg = this->codeGen.memory->getFreeRegister();
     std::string checkReg = this->codeGen.memory->getFreeRegister();
 
     this->codeGen.commands.push_back(new Command(RESET, tempSumReg));

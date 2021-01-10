@@ -31,6 +31,7 @@ public:
         std::string* sub(Variable* var1, Variable* var2);
         std::string* mul(Variable* var1, Variable* var2);
         std::string* div(Variable* var1, Variable* var2);
+        std::string* mod(Variable* var1, Variable* var2);
 
     private:
         CodeGenerator& codeGen;

@@ -114,3 +114,29 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     this->codeGen.memory->freeRegister(checkReg);
     return new std::string(resultReg);
 }
+
+std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
+    std::string* reg1 = this->codeGen.setVarToRegister(var1);
+    std::string* reg2 = this->codeGen.setVarToRegister(var2);
+    std::string checkReg = this->codeGen.memory->getFreeRegister();
+
+    std::string checkModZero = *reg2 + " 8";
+    std::string addParam = checkReg + " " + *reg2;
+    std::string subParam = checkReg + " " + *reg1;
+    std::string checkEnd = checkReg + " 2";
+    std::string subAandB = *reg1 + " " + *reg2;
+
+    this->codeGen.commands.push_back(new Command(JZERO, checkModZero));
+    this->codeGen.commands.push_back(new Command(RESET, checkReg));
+    this->codeGen.commands.push_back(new Command(ADD, addParam));
+    this->codeGen.commands.push_back(new Command(SUB, subParam));
+    this->codeGen.commands.push_back(new Command(JZERO, checkEnd));
+    this->codeGen.commands.push_back(new Command(JUMP, "4"));
+    this->codeGen.commands.push_back(new Command(SUB, subAandB));
+    this->codeGen.commands.push_back(new Command(JUMP, "-6"));
+    this->codeGen.commands.push_back(new Command(RESET, *reg1));
+
+    this->codeGen.memory->freeRegister(*reg2);
+    this->codeGen.memory->freeRegister(checkReg);
+    return reg1;
+}

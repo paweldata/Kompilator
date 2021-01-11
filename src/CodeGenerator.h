@@ -51,8 +51,17 @@ public:
         CodeGenerator& codeGen;
     };
 
+    class FlowControler {
+    public:
+        FlowControler(CodeGenerator& code) : codeGen(code) {};
+
+    private:
+        CodeGenerator& codeGen;
+    };
+
     Operations* doOperation() { return &this->operations; }
     Conditions* makeCondition() { return &this->conditions; }
+    FlowControler* flowControl() { return &this->flowControler; }
 
 private:
     void setRegisterValue(std::string reg, uint value);
@@ -66,6 +75,7 @@ private:
     Memory* memory;
     Operations operations;
     Conditions conditions;
+    FlowControler flowControler;
     std::vector<Command*> commands;
     std::stack<Command*> stack;
 };

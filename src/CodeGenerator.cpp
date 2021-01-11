@@ -1,6 +1,9 @@
 #include "CodeGenerator.h"
 
-CodeGenerator::CodeGenerator(Memory* memory) : operations(*this), conditions(*this) {
+CodeGenerator::CodeGenerator(Memory* memory)
+    : operations(*this)
+    , conditions(*this)
+    , flowControler(*this) {
     this->memory = memory;
 }
 

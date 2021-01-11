@@ -1,7 +1,7 @@
 all: compile clean
 
-compile: parser lexer CodeGenerator.o Operations.o Conditions.o Command.o Variable.o Array.o ArrayAddress.o Constant.o Memory.o
-	g++ -g3 -o compiler parser.tab.cpp lex.yy.c -lfl CodeGenerator.o Operations.o Conditions.o Command.o Variable.o Array.o ArrayAddress.o Constant.o Memory.o
+compile: parser lexer CodeGenerator.o Operations.o Conditions.o FlowControler.o Command.o Variable.o Array.o ArrayAddress.o Constant.o Memory.o
+	g++ -g3 -o compiler parser.tab.cpp lex.yy.c -lfl CodeGenerator.o Operations.o Conditions.o FlowControler.o Command.o Variable.o Array.o ArrayAddress.o Constant.o Memory.o
 
 lexer:
 	flex lexer.l
@@ -17,6 +17,9 @@ Operations.o: src/Operations.cpp src/CodeGenerator.h
 
 Conditions.o: src/Conditions.cpp src/CodeGenerator.h
 	g++ -g3 -c src/Conditions.cpp -o Conditions.o
+
+FlowControler.o: src/FlowControler.cpp src/CodeGenerator.h
+	g++ -g3 -c src/FlowControler.cpp -o FlowControler.o
 
 Command.o: src/Command.cpp src/Command.h
 	g++ -g3 -c src/Command.cpp -o Command.o

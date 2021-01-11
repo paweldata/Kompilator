@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "src/variable/Variable.h"
+#include "src/CodeGenerator.h"
 #include "parser.tab.hpp"
 
 int yylex();

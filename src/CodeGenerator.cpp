@@ -1,6 +1,6 @@
 #include "CodeGenerator.h"
 
-CodeGenerator::CodeGenerator(Memory* memory) : operations(*this) {
+CodeGenerator::CodeGenerator(Memory* memory) : operations(*this), conditions(*this) {
     this->memory = memory;
 }
 

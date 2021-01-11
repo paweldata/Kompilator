@@ -9,6 +9,11 @@
 #include "Memory.h"
 #include "variable/ArrayAddress.h"
 
+struct Condition {
+    uint ptrBeforeCondition;
+    Command* falseJump;
+};
+
 class CodeGenerator {
 public:
     CodeGenerator(Memory* memory);
@@ -37,7 +42,16 @@ public:
         CodeGenerator& codeGen;
     };
 
-    Operations* doOperation() { return &this->operations; };
+    class Conditions {
+    public:
+        Conditions(CodeGenerator& code) : codeGen(code) {};
+
+    private:
+        CodeGenerator& codeGen;
+    };
+
+    Operations* doOperation() { return &this->operations; }
+    Conditions* makeCondition() { return &this->conditions; }
 
 private:
     void setRegisterValue(std::string reg, uint value);
@@ -50,6 +64,7 @@ private:
 
     Memory* memory;
     Operations operations;
+    Conditions conditions;
     std::vector<Command*> commands;
     std::stack<Command*> stack;
 };

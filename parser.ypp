@@ -95,7 +95,7 @@ expression:
 ;
 
 condition:
-    value EQ value
+    value EQ value                                  { $$ = codeGenerator->makeCondition()->equal($1, $3); }
 |   value NE value
 |   value LT value
 |   value GT value

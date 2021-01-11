@@ -45,6 +45,7 @@ public:
     class Conditions {
     public:
         Conditions(CodeGenerator& code) : codeGen(code) {};
+        Condition equal(Variable* var1, Variable* var2);
 
     private:
         CodeGenerator& codeGen;

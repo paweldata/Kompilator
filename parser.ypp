@@ -80,7 +80,7 @@ command:
 |   IF condition THEN commands                      { $1 = codeGenerator->flowControl()->ifElseFirst($2); }
     ELSE commands ENDIF                             { codeGenerator->flowControl()->ifElseSecond($1); }
 |   IF condition THEN commands ENDIF                { codeGenerator->flowControl()->singleIf($2); }
-|   WHILE condition DO commands ENDWHILE
+|   WHILE condition DO commands ENDWHILE            { codeGenerator->flowControl()->whileLoop($2); }
 |   REPEAT commands UNTIL condition SEMICOLON
 |   FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
 |   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR

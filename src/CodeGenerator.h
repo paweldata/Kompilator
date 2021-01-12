@@ -60,9 +60,12 @@ public:
     class FlowControler {
     public:
         FlowControler(CodeGenerator& code) : codeGen(code) {};
+
         void singleIf(Condition cond);
         IfElseParam ifElseFirst(Condition cond);
         void ifElseSecond(IfElseParam param);
+
+        void whileLoop(Condition cond);
 
     private:
         CodeGenerator& codeGen;

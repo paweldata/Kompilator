@@ -33,7 +33,6 @@ uint CodeGenerator::FlowControler::repeatUntilFirst() {
 }
 
 void CodeGenerator::FlowControler::repeatUntilSecond(Condition cond, uint ptr) {
-    int jumpValue = ptr - this->codeGen.commands.size();
-    this->codeGen.commands.push_back(new Command(JUMP, std::to_string(jumpValue)));
-    cond.falseJump->setParam("2");
+    int jumpValue = ptr - this->codeGen.commands.size() + 1;
+    cond.falseJump->setParam(std::to_string(jumpValue));
 }

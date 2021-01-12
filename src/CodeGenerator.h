@@ -66,6 +66,8 @@ public:
         void ifElseSecond(IfElseParam param);
 
         void whileLoop(Condition cond);
+        uint repeatUntilFirst();
+        void repeatUntilSecond(Condition cond, uint ptr);
 
     private:
         CodeGenerator& codeGen;

@@ -27,3 +27,13 @@ void CodeGenerator::FlowControler::whileLoop(Condition cond) {
     jumpValue = this->codeGen.commands.size() - cond.afterCondPtr + 1;
     cond.falseJump->setParam(std::to_string(jumpValue));
 }
+
+uint CodeGenerator::FlowControler::repeatUntilFirst() {
+    return this->codeGen.commands.size();
+}
+
+void CodeGenerator::FlowControler::repeatUntilSecond(Condition cond, uint ptr) {
+    int jumpValue = ptr - this->codeGen.commands.size();
+    this->codeGen.commands.push_back(new Command(JUMP, std::to_string(jumpValue)));
+    cond.falseJump->setParam("2");
+}

@@ -10,7 +10,8 @@
 #include "variable/ArrayAddress.h"
 
 struct Condition {
-    uint ptrBeforeCondition;
+    uint beforeCondPtr;
+    uint afterCondPtr;
     Command* falseJump;
 };
 

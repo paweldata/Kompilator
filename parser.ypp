@@ -103,7 +103,7 @@ condition:
     value EQ value                                  { $$ = codeGenerator->makeCondition()->equal($1, $3); }
 |   value NE value                                  { $$ = codeGenerator->makeCondition()->notEqual($1, $3); }
 |   value LT value                                  { $$ = codeGenerator->makeCondition()->less($1, $3); }
-|   value GT value
+|   value GT value                                  { $$ = codeGenerator->makeCondition()->greater($1, $3); }
 |   value LE value                                  { $$ = codeGenerator->makeCondition()->lessOrEqual($1, $3); }
 |   value GE value
 ;

@@ -34,3 +34,13 @@ Condition CodeGenerator::Conditions::equal(Variable* var1, Variable* var2) {
 
     return cond;
 }
+
+Condition CodeGenerator::Conditions::notEqual(Variable* var1, Variable* var2) {
+    Condition cond = this->equal(var1, var2);
+    cond.falseJump->setParam("2");
+
+    cond.falseJump = new Command(JUMP, "");
+    this->codeGen.commands.push_back(cond.falseJump);
+    cond.afterCondPtr++;
+    return cond;
+}

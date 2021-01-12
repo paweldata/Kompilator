@@ -52,6 +52,7 @@ public:
     public:
         Conditions(CodeGenerator& code) : codeGen(code) {};
         Condition equal(Variable* var1, Variable* var2);
+        Condition notEqual(Variable* var1, Variable* var2);
 
     private:
         CodeGenerator& codeGen;

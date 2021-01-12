@@ -101,7 +101,7 @@ expression:
 
 condition:
     value EQ value                                  { $$ = codeGenerator->makeCondition()->equal($1, $3); }
-|   value NE value
+|   value NE value                                  { $$ = codeGenerator->makeCondition()->notEqual($1, $3); }
 |   value LT value
 |   value GT value
 |   value LE value

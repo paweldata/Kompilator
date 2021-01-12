@@ -55,6 +55,7 @@ public:
     class FlowControler {
     public:
         FlowControler(CodeGenerator& code) : codeGen(code) {};
+        void singleIf(Condition cond);
 
     private:
         CodeGenerator& codeGen;

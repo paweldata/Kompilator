@@ -56,6 +56,7 @@ public:
         Condition less(Variable* var1, Variable* var2);
         Condition lessOrEqual(Variable* var1, Variable* var2);
         Condition greater(Variable* var1, Variable* var2);
+        Condition greaterOrEqual(Variable* var1, Variable* var2);
 
     private:
         CodeGenerator& codeGen;

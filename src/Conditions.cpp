@@ -117,3 +117,13 @@ Condition CodeGenerator::Conditions::greater(Variable* var1, Variable* var2) {
     cond.afterCondPtr++;
     return cond;
 }
+
+Condition CodeGenerator::Conditions::greaterOrEqual(Variable* var1, Variable* var2) {
+    Condition cond = this->less(var1, var2);
+    cond.falseJump->setParam("2");
+
+    cond.falseJump = new Command(JUMP, "");
+    this->codeGen.commands.push_back(cond.falseJump);
+    cond.afterCondPtr++;
+    return cond;
+}

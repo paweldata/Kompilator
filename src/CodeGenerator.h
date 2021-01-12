@@ -15,6 +15,11 @@ struct Condition {
     Command* falseJump;
 };
 
+struct IfElseParam {
+    uint ptr;
+    Command* jump;
+};
+
 class CodeGenerator {
 public:
     CodeGenerator(Memory* memory);
@@ -56,6 +61,8 @@ public:
     public:
         FlowControler(CodeGenerator& code) : codeGen(code) {};
         void singleIf(Condition cond);
+        IfElseParam ifElseFirst(Condition cond);
+        void ifElseSecond(IfElseParam param);
 
     private:
         CodeGenerator& codeGen;

@@ -36,6 +36,7 @@ public:
 private:
     void checkIfVariableNotExitsts(std::string name);
     void checkIfVariableAlreadyExists(std::string name);
+    void checkIfTryUseArrayAsVariable(std::string name);
     void checkArraySize(uint start, uint end);
 
     std::map<std::string, Variable*> variables;

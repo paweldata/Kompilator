@@ -13,6 +13,7 @@ Memory::Memory() {
 
 Variable* Memory::getVariable(std::string name) {
     this->checkIfVariableNotExitsts(name);
+    this->checkIfTryUseArrayAsVariable(name);
     return this->variables[name];
 }
 
@@ -95,4 +96,9 @@ void Memory::checkIfVariableNotExitsts(std::string name) {
 void Memory::checkIfVariableAlreadyExists(std::string name) {
     if (this->variables.find(name) != this->variables.end())
         throw (std::string) name + " already defined";
+}
+
+void Memory::checkIfTryUseArrayAsVariable(std::string name) {
+    if (auto arr = dynamic_cast<Array*>(this->variables[name]))
+        throw (std::string) name + " is not an array";
 }

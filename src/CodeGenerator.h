@@ -84,6 +84,8 @@ public:
 
         ForParam forLoopToFirst(std::string itName, Variable* firstValue, Variable* secondValue);
         void forLoopToSecond(ForParam param);
+        ForParam forLoopDownToFirst(std::string itName, Variable* firstValue, Variable* secondValue);
+        void forLoopDownToSecond(ForParam param);
 
     private:
         CodeGenerator& codeGen;

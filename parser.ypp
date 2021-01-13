@@ -88,7 +88,8 @@ command:
     commands UNTIL condition SEMICOLON              { codeGenerator->flowControl()->repeatUntilSecond($5, $1); }
 |   FOR PIDENTIFIER FROM value TO value             { $1 = codeGenerator->flowControl()->forLoopToFirst(*$2, $4, $6); }
     DO commands ENDFOR                              { codeGenerator->flowControl()->forLoopToSecond($1); }
-|   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
+|   FOR PIDENTIFIER FROM value DOWNTO value         { $1 = codeGenerator->flowControl()->forLoopDownToFirst(*$2, $4, $6); }
+    DO commands ENDFOR                              { codeGenerator->flowControl()->forLoopDownToSecond($1); }
 |   READ identifier SEMICOLON                       { codeGenerator->readVariable($2); }
 |   WRITE value SEMICOLON                           { codeGenerator->writeVariable($2); }
 ;

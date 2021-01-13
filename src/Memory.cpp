@@ -67,6 +67,11 @@ Iterator* Memory::setIterator(std::string name) {
     return dynamic_cast<Iterator*>(this->variables[name]);
 }
 
+void Memory::deleteIterator(Iterator* it) {
+    this->variables.erase(it->getName());
+    delete it;
+}
+
 std::string Memory::getFreeRegister() {
     for (int i = 0; i < REGISTERSNUMBER; i++)
         if (not this->registers[i].isUsed) {

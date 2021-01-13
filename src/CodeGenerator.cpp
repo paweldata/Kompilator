@@ -72,6 +72,11 @@ void CodeGenerator::assignValue(Variable* var, std::string reg) {
         return;
     }
 
+    this->checkIfTryModifyIterator(var);
+    this->assignValueAfterChecks(var, reg);
+}
+
+void CodeGenerator::assignValueAfterChecks(Variable* var, std::string reg) {
     var->initialize();
     uint address = var->getAddress();
     std::string varReg = memory->getFreeRegister();
@@ -195,4 +200,9 @@ std::string* CodeGenerator::setArrVarToRegister(ArrayAddress* arr) {
 
     memory->freeRegister(regWithAddress);
     return new std::string(regWithIndexValue);
+}
+
+void CodeGenerator::checkIfTryModifyIterator(Variable* var) {
+    if (auto it = dynamic_cast<Iterator*>(var))
+        throw (std::string) "try modify iterator " + var->getName();
 }

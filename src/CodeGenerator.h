@@ -96,6 +96,8 @@ public:
     FlowControler* flowControl() { return &this->flowControler; }
 
 private:
+    void assignValueAfterChecks(Variable* var, std::string reg);
+
     void setRegisterValue(std::string reg, uint value);
     std::string decToBin(uint value);
 
@@ -103,6 +105,8 @@ private:
     void writeArrayAddress(ArrayAddress* arr);
     void assignArrayValue(ArrayAddress* arr, std::string reg);
     std::string* setArrVarToRegister(ArrayAddress* arr);
+
+    void checkIfTryModifyIterator(Variable* var);
 
     Memory* memory;
     Operations operations;

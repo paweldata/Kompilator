@@ -46,7 +46,7 @@ ForParam CodeGenerator::FlowControler::forLoopToFirst(std::string itName, Variab
     this->codeGen.memory->setVariable(counterName);
     Variable* counter = this->codeGen.memory->getVariable(counterName);
 
-    this->codeGen.assignValue(it, *reg1);
+    this->codeGen.assignValueAfterChecks(it, *reg1);
     this->codeGen.commands.push_back(new Command(INC, *reg2));
     this->codeGen.commands.push_back(new Command(SUB, *reg2 + " " + *reg1));
     this->codeGen.assignValue(counter, *reg2);
@@ -93,6 +93,8 @@ void CodeGenerator::FlowControler::forLoopToSecond(ForParam param) {
 
     jumpValue = this->codeGen.commands.size() - param.jumpPtr + 1;
     param.jump->setParam(std::to_string(jumpValue));
+
+    this->codeGen.memory->deleteIterator(param.it);
 }
 
 ForParam CodeGenerator::FlowControler::forLoopDownToFirst(std::string itName, Variable* firstValue, Variable* secondValue) {
@@ -107,7 +109,7 @@ ForParam CodeGenerator::FlowControler::forLoopDownToFirst(std::string itName, Va
 
     this->codeGen.commands.push_back(new Command(RESET, reg3));
     this->codeGen.commands.push_back(new Command(ADD, reg3 + " " + *reg1));
-    this->codeGen.assignValue(it, reg3);
+    this->codeGen.assignValueAfterChecks(it, reg3);
     this->codeGen.commands.push_back(new Command(INC, *reg1));
     this->codeGen.commands.push_back(new Command(SUB, *reg1 + " " + *reg2));
     this->codeGen.assignValue(counter, *reg1);
@@ -155,4 +157,6 @@ void CodeGenerator::FlowControler::forLoopDownToSecond(ForParam param) {
 
     jumpValue = this->codeGen.commands.size() - param.jumpPtr + 1;
     param.jump->setParam(std::to_string(jumpValue));
+
+    this->codeGen.memory->deleteIterator(param.it);
 }

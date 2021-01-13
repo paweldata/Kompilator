@@ -27,6 +27,7 @@ public:
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
     Iterator* setIterator(std::string name);
+    void deleteIterator(Iterator* it);
 
     std::string getFreeRegister();
     void freeRegister(std::string reg);

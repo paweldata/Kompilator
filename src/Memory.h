@@ -7,6 +7,7 @@
 
 #include "variable/Variable.h"
 #include "variable/Constant.h"
+#include "variable/Iterator.h"
 
 constexpr uint REGISTERSNUMBER = 6;
 
@@ -25,6 +26,7 @@ public:
 
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
+    Iterator* setIterator(std::string name);
 
     std::string getFreeRegister();
     void freeRegister(std::string reg);

@@ -59,6 +59,13 @@ void Memory::setArray(std::string name, uint start, uint end) {
     this->freeMemPtr += end - start + 1;
 }
 
+Iterator* Memory::setIterator(std::string name) {
+    this->checkIfVariableAlreadyExists(name);
+    this->variables[name] = new Iterator(name, this->freeMemPtr);
+    this->freeMemPtr++;
+    return dynamic_cast<Iterator*>(this->variables[name]);
+}
+
 std::string Memory::getFreeRegister() {
     for (int i = 0; i < REGISTERSNUMBER; i++)
         if (not this->registers[i].isUsed) {

@@ -20,6 +20,14 @@ struct IfElseParam {
     Command* jump;
 };
 
+struct ForParam {
+    uint loopPtr;
+    uint jumpPtr;
+    Command* jump;
+    Iterator* it;
+};
+
+
 class CodeGenerator {
 public:
     CodeGenerator(Memory* memory);
@@ -73,6 +81,9 @@ public:
         void whileLoop(Condition cond);
         uint repeatUntilFirst();
         void repeatUntilSecond(Condition cond, uint ptr);
+
+        ForParam forLoopToFirst(std::string itName, Variable* firstValue, Variable* secondValue);
+        void forLoopToSecond(ForParam param);
 
     private:
         CodeGenerator& codeGen;

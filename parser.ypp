@@ -20,6 +20,7 @@ void yyerror(std::string error);
     Variable* var;
     Condition cond;
     IfElseParam ifElse;
+    ForParam forParam;
 }
 
 %start program
@@ -31,7 +32,8 @@ void yyerror(std::string error);
 %token WHILE DO ENDWHILE
 %token <num> REPEAT
 %token UNTIL
-%token FOR FROM TO DOWNTO ENDFOR
+%token <forParam> FOR
+%token FROM TO DOWNTO ENDFOR
 
 %left PLUS MINUS MULTIPLY DIVIDE MODULO
 
@@ -84,7 +86,8 @@ command:
 |   WHILE condition DO commands ENDWHILE            { codeGenerator->flowControl()->whileLoop($2); }
 |   REPEAT                                          { $1 = codeGenerator->flowControl()->repeatUntilFirst(); }
     commands UNTIL condition SEMICOLON              { codeGenerator->flowControl()->repeatUntilSecond($5, $1); }
-|   FOR PIDENTIFIER FROM value TO value DO commands ENDFOR
+|   FOR PIDENTIFIER FROM value TO value             { $1 = codeGenerator->flowControl()->forLoopToFirst(*$2, $4, $6); }
+    DO commands ENDFOR                              { codeGenerator->flowControl()->forLoopToSecond($1); }
 |   FOR PIDENTIFIER FROM value DOWNTO value DO commands ENDFOR
 |   READ identifier SEMICOLON                       { codeGenerator->readVariable($2); }
 |   WRITE value SEMICOLON                           { codeGenerator->writeVariable($2); }

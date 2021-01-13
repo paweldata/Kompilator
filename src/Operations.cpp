@@ -124,27 +124,46 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
 }
 
 std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
-    std::string* reg1 = this->codeGen.setVarToRegister(var1);
-    std::string* reg2 = this->codeGen.setVarToRegister(var2);
-    std::string checkReg = this->codeGen.memory->getFreeRegister();
+    // a % b = a - (b * int(a/b))
+    std::string* reg1 = this->div(var1, var2);
+    std::string *reg2 = this->codeGen.setVarToRegister(var2);
+    std::string mulResultReg = this->codeGen.memory->getFreeRegister();
 
-    std::string checkModZero = *reg2 + " 8";
-    std::string addParam = checkReg + " " + *reg2;
-    std::string subParam = checkReg + " " + *reg1;
-    std::string checkEnd = checkReg + " 2";
-    std::string subAandB = *reg1 + " " + *reg2;
+    std::string checkZero = *reg2 + " 2";
+    Command* jump = new Command(JUMP, "");
 
-    this->codeGen.commands.push_back(new Command(JZERO, checkModZero));
-    this->codeGen.commands.push_back(new Command(RESET, checkReg));
-    this->codeGen.commands.push_back(new Command(ADD, addParam));
-    this->codeGen.commands.push_back(new Command(SUB, subParam));
-    this->codeGen.commands.push_back(new Command(JZERO, checkEnd));
-    this->codeGen.commands.push_back(new Command(JUMP, "4"));
-    this->codeGen.commands.push_back(new Command(SUB, subAandB));
-    this->codeGen.commands.push_back(new Command(JUMP, "-6"));
+    // if var2 == 0, return 0
+    this->codeGen.commands.push_back(new Command(JZERO, checkZero));
+    this->codeGen.commands.push_back(new Command(JUMP, "3"));
     this->codeGen.commands.push_back(new Command(RESET, *reg1));
+    this->codeGen.commands.push_back(jump);
+
+    uint jumpPtr = this->codeGen.commands.size();
+    std::string jzeroParam = *reg2 + " 7";
+    std::string joddParam = *reg2 + " 2";
+    std::string addParam = mulResultReg + " " + *reg1;
+
+    this->codeGen.commands.push_back(new Command(RESET, mulResultReg));
+    this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
+    this->codeGen.commands.push_back(new Command(JODD, joddParam));
+    this->codeGen.commands.push_back(new Command(JUMP, "2"));
+    this->codeGen.commands.push_back(new Command(ADD, addParam));
+    this->codeGen.commands.push_back(new Command(SHL, *reg1));
+    this->codeGen.commands.push_back(new Command(SHR, *reg2));
+    this->codeGen.commands.push_back(new Command(JUMP, "-6"));
+
+    this->codeGen.memory->freeRegister(*reg1);
+    reg1 = this->codeGen.setVarToRegister(var1);
+
+    std::string subParam = *reg1 + " " + mulResultReg;
+
+    this->codeGen.commands.push_back(new Command(SUB, subParam));
+
+    uint jumpSize = this->codeGen.commands.size() - jumpPtr + 1;
+    jump->setParam(std::to_string(jumpSize));
 
     this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(mulResultReg);
+
     return reg1;
 }

@@ -8,7 +8,6 @@
 Memory::Memory() {
     this->variables = std::map<std::string, Variable*>();
     this->registers = std::vector<Register>(REGISTERSNUMBER, Register{-1, false});
-    this->freeMemPtr = 0;
 }
 
 Variable* Memory::getVariable(std::string name) {
@@ -73,11 +72,14 @@ void Memory::deleteIterator(Iterator* it) {
 }
 
 std::string Memory::getFreeRegister() {
-    for (int i = 0; i < REGISTERSNUMBER; i++)
-        if (not this->registers[i].isUsed) {
-            this->registers[i].isUsed = true;
-            return std::string(1, (char)('a' + i));
+    for (int i = 0; i < REGISTERSNUMBER; i++) {
+        uint regNumber = (i + this->lastSentRegNumber + 1) % REGISTERSNUMBER;
+        if (not this->registers[regNumber].isUsed) {
+            this->registers[regNumber].isUsed = true;
+            this->lastSentRegNumber = regNumber;
+            return std::string(1, (char)('a' + regNumber));
         }
+    }
     throw "Error: there is no free register";
 }
 

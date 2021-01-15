@@ -43,7 +43,8 @@ private:
     std::map<std::string, Variable*> variables;
     std::vector<Constant*> constants;
     std::vector<Register> registers;
-    uint freeMemPtr;
+    uint freeMemPtr{0};
+    uint lastSentRegNumber{5};
 };
 
 #endif //MEMORY_H

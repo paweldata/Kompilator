@@ -131,11 +131,12 @@ std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
 
     std::string checkZero = *reg2 + " 2";
     Command* jump = new Command(JUMP, "");
+    Command* reset = new Command(RESET, "");
 
     // if var2 == 0, return 0
     this->codeGen.commands.push_back(new Command(JZERO, checkZero));
     this->codeGen.commands.push_back(new Command(JUMP, "3"));
-    this->codeGen.commands.push_back(new Command(RESET, *reg1));
+    this->codeGen.commands.push_back(reset);
     this->codeGen.commands.push_back(jump);
 
     uint jumpPtr = this->codeGen.commands.size();
@@ -154,6 +155,7 @@ std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
 
     this->codeGen.memory->freeRegister(*reg1);
     reg1 = this->codeGen.setVarToRegister(var1);
+    reset->setParam(*reg1);
 
     std::string subParam = *reg1 + " " + mulResultReg;
 

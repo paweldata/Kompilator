@@ -7,7 +7,7 @@ std::string* CodeGenerator::Operations::add(Variable* var1, Variable* var2) {
 
     this->codeGen.commands.push_back(new Command(ADD, param));
 
-    this->codeGen.memory->freeRegister(*reg2);
+    this->codeGen.memory->freeRegister(*reg2, -1);
     return reg1;
 }
 
@@ -18,7 +18,7 @@ std::string* CodeGenerator::Operations::sub(Variable* var1, Variable* var2) {
 
     this->codeGen.commands.push_back(new Command(SUB, param));
 
-    this->codeGen.memory->freeRegister(*reg2);
+    this->codeGen.memory->freeRegister(*reg2, -1);
     return reg1;
 }
 
@@ -40,8 +40,8 @@ std::string* CodeGenerator::Operations::mul(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(new Command(SHR, *reg2));
     this->codeGen.commands.push_back(new Command(JUMP, "-6"));
 
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(*reg1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(*reg1, -1);
     return new std::string(resultReg);
 }
 
@@ -68,7 +68,7 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(new Command(JUMP, "-7"));
     // end first loop
 
-    this->codeGen.memory->freeRegister(*reg2);
+    this->codeGen.memory->freeRegister(*reg2, -1);
     reg2 = this->codeGen.setVarToRegister(var2);
 
     std::string checkZero = *reg2 + " 2";
@@ -115,11 +115,11 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(new Command(JUMP, "-15"));
     // end second loop
 
-    this->codeGen.memory->freeRegister(reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(counterReg);
-    this->codeGen.memory->freeRegister(tempSumReg);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(counterReg, -1);
+    this->codeGen.memory->freeRegister(tempSumReg, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
     return new std::string(resultReg);
 }
 
@@ -153,7 +153,7 @@ std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(new Command(SHR, *reg2));
     this->codeGen.commands.push_back(new Command(JUMP, "-6"));
 
-    this->codeGen.memory->freeRegister(*reg1);
+    this->codeGen.memory->freeRegister(*reg1, -1);
     reg1 = this->codeGen.setVarToRegister(var1);
     reset->setParam(*reg1);
 
@@ -164,8 +164,8 @@ std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
     uint jumpSize = this->codeGen.commands.size() - jumpPtr + 1;
     jump->setParam(std::to_string(jumpSize));
 
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(mulResultReg);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(mulResultReg, -1);
 
     return reg1;
 }

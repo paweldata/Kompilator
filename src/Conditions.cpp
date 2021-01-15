@@ -28,9 +28,9 @@ Condition CodeGenerator::Conditions::equal(Variable* var1, Variable* var2) {
         .afterCondPtr = afterCondPtr,
         .falseJump = falseJump};
 
-    this->codeGen.memory->freeRegister(*reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(*reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
 
     return cond;
 }
@@ -70,9 +70,9 @@ Condition CodeGenerator::Conditions::less(Variable* var1, Variable* var2) {
         .afterCondPtr = afterCondPtr,
         .falseJump = falseJump};
 
-    this->codeGen.memory->freeRegister(*reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(*reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
 
     return cond;
 }
@@ -101,9 +101,9 @@ Condition CodeGenerator::Conditions::lessOrEqual(Variable* var1, Variable* var2)
         .afterCondPtr = afterCondPtr,
         .falseJump = falseJump};
 
-    this->codeGen.memory->freeRegister(*reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(*reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
 
     return cond;
 }

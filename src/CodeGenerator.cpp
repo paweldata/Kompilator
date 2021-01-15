@@ -20,7 +20,7 @@ void CodeGenerator::readVariable(Variable* var) {
     this->setRegisterValue(reg, address);
     this->commands.push_back(new Command(GET, reg));
 
-    memory->freeRegister(reg);
+    memory->freeRegister(reg, -1);
 }
 
 void CodeGenerator::writeVariable(Variable* var) {
@@ -35,7 +35,7 @@ void CodeGenerator::writeVariable(Variable* var) {
     this->setRegisterValue(reg, address);
     this->commands.push_back(new Command(PUT, reg));
 
-    memory->freeRegister(reg);
+    memory->freeRegister(reg, -1);
 }
 
 Variable* CodeGenerator::getConstant(uint value) {
@@ -60,8 +60,8 @@ void CodeGenerator::setConstValue(Variable* var) {
     this->setRegisterValue(regWithAddress, address);
     this->commands.push_back(new Command(STORE, param));
 
-    memory->freeRegister(regWithValue);
-    memory->freeRegister(regWithAddress);
+    memory->freeRegister(regWithValue, -1);
+    memory->freeRegister(regWithAddress, -1);
 }
 
 void CodeGenerator::setRegisterValue(std::string reg, uint value) {
@@ -94,8 +94,8 @@ void CodeGenerator::assignValueAfterChecks(Variable* var, std::string reg) {
     this->setRegisterValue(varReg, address);
     this->commands.push_back(new Command(STORE, param));
 
-    memory->freeRegister(reg);
-    memory->freeRegister(varReg);
+    memory->freeRegister(reg, -1);
+    memory->freeRegister(varReg, -1);
 }
 
 std::string* CodeGenerator::setVarToRegister(Variable* var) {
@@ -147,8 +147,8 @@ void CodeGenerator::readArrayAddress(ArrayAddress* arr) {
     this->commands.push_back(new Command(ADD, param));
     this->commands.push_back(new Command(GET, regWithIndexValue));
 
-    memory->freeRegister(regWithAddress);
-    memory->freeRegister(regWithIndexValue);
+    memory->freeRegister(regWithAddress, -1);
+    memory->freeRegister(regWithIndexValue, -1);
 }
 
 void CodeGenerator::writeArrayAddress(ArrayAddress* arr) {
@@ -166,8 +166,8 @@ void CodeGenerator::writeArrayAddress(ArrayAddress* arr) {
     this->commands.push_back(new Command(ADD, param));
     this->commands.push_back(new Command(PUT, regWithIndexValue));
 
-    memory->freeRegister(regWithAddress);
-    memory->freeRegister(regWithIndexValue);
+    memory->freeRegister(regWithAddress, -1);
+    memory->freeRegister(regWithIndexValue, -1);
 }
 
 void CodeGenerator::assignArrayValue(ArrayAddress* arr, std::string reg) {
@@ -186,9 +186,9 @@ void CodeGenerator::assignArrayValue(ArrayAddress* arr, std::string reg) {
     this->commands.push_back(new Command(ADD, param));
     this->commands.push_back(new Command(STORE, storeParam));
 
-    memory->freeRegister(regWithAddress);
-    memory->freeRegister(regWithIndexValue);
-    memory->freeRegister(reg);
+    memory->freeRegister(regWithAddress, -1);
+    memory->freeRegister(regWithIndexValue, -1);
+    memory->freeRegister(reg, -1);
 }
 
 std::string* CodeGenerator::setArrVarToRegister(ArrayAddress* arr) {
@@ -207,7 +207,7 @@ std::string* CodeGenerator::setArrVarToRegister(ArrayAddress* arr) {
     this->commands.push_back(new Command(ADD, param));
     this->commands.push_back(new Command(LOAD, loadParam));
 
-    memory->freeRegister(regWithAddress);
+    memory->freeRegister(regWithAddress, -1);
     return new std::string(regWithIndexValue);
 }
 

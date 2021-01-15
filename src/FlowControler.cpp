@@ -69,8 +69,8 @@ ForParam CodeGenerator::FlowControler::forLoopToFirst(std::string itName, Variab
     this->codeGen.commands.push_back(new Command(DEC, counterReg));
     this->codeGen.commands.push_back(new Command(STORE, counterReg + " " + counterAdress));
 
-    this->codeGen.memory->freeRegister(counterReg);
-    this->codeGen.memory->freeRegister(counterAdress);
+    this->codeGen.memory->freeRegister(counterReg, -1);
+    this->codeGen.memory->freeRegister(counterAdress, -1);
 
     return ForParam{.loopPtr = loopPtr, .jumpPtr = jumpPtr, .jump = jump, .it = it};
 }
@@ -85,8 +85,8 @@ void CodeGenerator::FlowControler::forLoopToSecond(ForParam param) {
     this->codeGen.commands.push_back(new Command(INC, itReg));
     this->codeGen.commands.push_back(new Command(STORE, itReg + " " + itAdress));
 
-    this->codeGen.memory->freeRegister(itReg);
-    this->codeGen.memory->freeRegister(itAdress);
+    this->codeGen.memory->freeRegister(itReg, -1);
+    this->codeGen.memory->freeRegister(itAdress, -1);
 
     int jumpValue = param.loopPtr - this->codeGen.commands.size();
     this->codeGen.commands.push_back(new Command(JUMP, std::to_string(jumpValue)));
@@ -113,7 +113,7 @@ ForParam CodeGenerator::FlowControler::forLoopDownToFirst(std::string itName, Va
     this->codeGen.commands.push_back(new Command(INC, *reg1));
     this->codeGen.commands.push_back(new Command(SUB, *reg1 + " " + *reg2));
     this->codeGen.assignValue(counter, *reg1);
-    this->codeGen.memory->freeRegister(*reg2);
+    this->codeGen.memory->freeRegister(*reg2, -1);
 
     uint loopPtr = this->codeGen.commands.size();
 
@@ -133,8 +133,8 @@ ForParam CodeGenerator::FlowControler::forLoopDownToFirst(std::string itName, Va
     this->codeGen.commands.push_back(new Command(DEC, counterReg));
     this->codeGen.commands.push_back(new Command(STORE, counterReg + " " + counterAdress));
 
-    this->codeGen.memory->freeRegister(counterReg);
-    this->codeGen.memory->freeRegister(counterAdress);
+    this->codeGen.memory->freeRegister(counterReg, -1);
+    this->codeGen.memory->freeRegister(counterAdress, -1);
 
     return ForParam{.loopPtr = loopPtr, .jumpPtr = jumpPtr, .jump = jump, .it = it};
 }
@@ -149,8 +149,8 @@ void CodeGenerator::FlowControler::forLoopDownToSecond(ForParam param) {
     this->codeGen.commands.push_back(new Command(DEC, itReg));
     this->codeGen.commands.push_back(new Command(STORE, itReg + " " + itAdress));
 
-    this->codeGen.memory->freeRegister(itReg);
-    this->codeGen.memory->freeRegister(itAdress);
+    this->codeGen.memory->freeRegister(itReg, -1);
+    this->codeGen.memory->freeRegister(itAdress, -1);
 
     int jumpValue = param.loopPtr - this->codeGen.commands.size();
     this->codeGen.commands.push_back(new Command(JUMP, std::to_string(jumpValue)));

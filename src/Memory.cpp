@@ -83,10 +83,28 @@ std::string Memory::getFreeRegister() {
     throw "Error: there is no free register";
 }
 
-void Memory::freeRegister(std::string reg) {
+std::pair<std::string, bool> Memory::getFreeRegister(Variable* var) {
+    if (auto arrAddr = dynamic_cast<ArrayAddress*>(var)) {
+        return std::make_pair(this->getFreeRegister(), false);
+    }
+
+    for (int i = 0; i < REGISTERSNUMBER; i++) {
+        if (not this->registers[i].isUsed and this->registers[i].value == var->getAddress()) {
+            this->registers[i].isUsed = true;
+            this->lastSentRegNumber = i;
+            return std::make_pair(std::string(1, (char)('a' + i)), true);
+        }
+    }
+
+    return std::make_pair(this->getFreeRegister(), false);
+}
+
+void Memory::freeRegister(std::string reg, int value) {
     uint regNumber = (uint)(reg[0] - 'a');
     assert(regNumber < REGISTERSNUMBER);
     assert(this->registers[regNumber].isUsed);
+
+    this->registers[regNumber].value = value;
     this->registers[regNumber].isUsed = false;
 }
 

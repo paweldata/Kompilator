@@ -55,7 +55,7 @@ void yyerror(std::string error);
 
 program:
     DECLARE declarations _BEGIN commands END        { codeGenerator->endGenerateCode(); }
-|   _BEGIN commands END
+|   _BEGIN commands END                             { codeGenerator->endGenerateCode(); }
 ;
 
 declarations:

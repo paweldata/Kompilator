@@ -38,6 +38,15 @@ void CodeGenerator::writeVariable(Variable* var) {
     memory->freeRegister(reg);
 }
 
+Variable* CodeGenerator::getConstant(uint value) {
+    Variable* constant;
+    bool isAlreadySet;
+    std::tie(constant, isAlreadySet) = this->memory->getConstant(value);
+    if (not isAlreadySet)
+        this->setConstValue(constant);
+    return constant;
+}
+
 void CodeGenerator::setConstValue(Variable* var) {
     Constant* constant = dynamic_cast<Constant*>(var);
     uint address = constant->getAddress();

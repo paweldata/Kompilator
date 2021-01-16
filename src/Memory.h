@@ -22,7 +22,7 @@ public:
     Variable* getVariable(std::string name);
     Variable* getArrayVariable(std::string name, uint index);
     Variable* getArrayVariable(std::string name, std::string index);
-    Variable* getConstant(uint value);
+    std::pair<Variable*, bool> getConstant(uint value);
 
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);

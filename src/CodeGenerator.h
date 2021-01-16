@@ -35,7 +35,7 @@ public:
     void readVariable(Variable* var);
     void writeVariable(Variable* var);
 
-    void setConstValue(Variable* var);
+    Variable* getConstant(uint value);
 
     void assignValue(Variable* var, std::string reg);
     std::string* setVarToRegister(Variable* var);
@@ -98,6 +98,7 @@ public:
 private:
     void assignValueAfterChecks(Variable* var, std::string reg);
 
+    void setConstValue(Variable* var);
     void setRegisterValue(std::string reg, uint value);
     std::string decToBin(uint value);
 

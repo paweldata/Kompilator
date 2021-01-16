@@ -37,15 +37,15 @@ Variable* Memory::getArrayVariable(std::string name, std::string index) {
     throw (std::string) var->getName() + " is not an array";
 }
 
-Variable* Memory::getConstant(uint value) {
+std::pair<Variable*, bool> Memory::getConstant(uint value) {
     for (Constant* constant : this->constants)
         if (constant->getValue() == value)
-            return constant;
+            return std::make_pair(constant, true);
     
     Constant* constant = new Constant(value, this->freeMemPtr);
     this->freeMemPtr++;
     this->constants.push_back(constant);
-    return constant;
+    return std::make_pair(constant, false);
 }
 
 void Memory::setVariable(std::string name) {

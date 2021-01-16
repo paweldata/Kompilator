@@ -113,7 +113,7 @@ condition:
 ;
 
 value:
-    NUM                                             { $$ = memory->getConstant($1); codeGenerator->setConstValue($$); }
+    NUM                                             { $$ = codeGenerator->getConstant($1); }
 |   identifier
 ;
 

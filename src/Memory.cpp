@@ -108,6 +108,11 @@ void Memory::freeRegister(std::string reg, int value) {
     this->registers[regNumber].isUsed = false;
 }
 
+void Memory::resetRegistersValue() {
+    for (Register& reg : this->registers)
+        reg.value = -1;
+}
+
 void Memory::assertFreeRegisters() {
     for (Register reg : this->registers)
         assert(not reg.isUsed);

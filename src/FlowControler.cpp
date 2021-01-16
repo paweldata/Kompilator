@@ -3,21 +3,23 @@
 void CodeGenerator::FlowControler::singleIf(Condition cond) {
     uint jumpValue = this->codeGen.commands.size() - cond.afterCondPtr + 1;
     cond.falseJump->setParam(std::to_string(jumpValue));
+    this->codeGen.memory->resetRegistersValue();
 }
 
 IfElseParam CodeGenerator::FlowControler::ifElseFirst(Condition cond) {
     Command* jump = new Command(JUMP, "");
     this->codeGen.commands.push_back(jump);
-
     this->singleIf(cond);
 
     uint ptr = this->codeGen.commands.size();
+    this->codeGen.memory->resetRegistersValue();
     return IfElseParam{.ptr = ptr, .jump = jump};
 }
 
 void CodeGenerator::FlowControler::ifElseSecond(IfElseParam param) {
     uint jumpValue = this->codeGen.commands.size() - param.ptr + 1;
     param.jump->setParam(std::to_string(jumpValue));
+    this->codeGen.memory->resetRegistersValue();
 }
 
 void CodeGenerator::FlowControler::whileLoop(Condition cond) {
@@ -26,15 +28,18 @@ void CodeGenerator::FlowControler::whileLoop(Condition cond) {
 
     jumpValue = this->codeGen.commands.size() - cond.afterCondPtr + 1;
     cond.falseJump->setParam(std::to_string(jumpValue));
+    this->codeGen.memory->resetRegistersValue();
 }
 
 uint CodeGenerator::FlowControler::repeatUntilFirst() {
+    this->codeGen.memory->resetRegistersValue();
     return this->codeGen.commands.size();
 }
 
 void CodeGenerator::FlowControler::repeatUntilSecond(Condition cond, uint ptr) {
     int jumpValue = ptr - this->codeGen.commands.size() + 1;
     cond.falseJump->setParam(std::to_string(jumpValue));
+    this->codeGen.memory->resetRegistersValue();
 }
 
 ForParam CodeGenerator::FlowControler::forLoopToFirst(std::string itName, Variable* firstValue, Variable* secondValue) {
@@ -52,6 +57,8 @@ ForParam CodeGenerator::FlowControler::forLoopToFirst(std::string itName, Variab
     this->codeGen.assignValue(counter, *reg2);
 
     uint loopPtr = this->codeGen.commands.size();
+
+    this->codeGen.memory->resetRegistersValue();
 
     uint address = counter->getAddress();
     std::string counterReg = this->codeGen.memory->getFreeRegister();
@@ -95,6 +102,7 @@ void CodeGenerator::FlowControler::forLoopToSecond(ForParam param) {
     param.jump->setParam(std::to_string(jumpValue));
 
     this->codeGen.memory->deleteIterator(param.it);
+    this->codeGen.memory->resetRegistersValue();
 }
 
 ForParam CodeGenerator::FlowControler::forLoopDownToFirst(std::string itName, Variable* firstValue, Variable* secondValue) {
@@ -116,6 +124,8 @@ ForParam CodeGenerator::FlowControler::forLoopDownToFirst(std::string itName, Va
     this->codeGen.memory->freeRegister(*reg2, -1);
 
     uint loopPtr = this->codeGen.commands.size();
+
+    this->codeGen.memory->resetRegistersValue();
 
     uint address = counter->getAddress();
     std::string counterReg = this->codeGen.memory->getFreeRegister();
@@ -159,4 +169,5 @@ void CodeGenerator::FlowControler::forLoopDownToSecond(ForParam param) {
     param.jump->setParam(std::to_string(jumpValue));
 
     this->codeGen.memory->deleteIterator(param.it);
+    this->codeGen.memory->resetRegistersValue();
 }

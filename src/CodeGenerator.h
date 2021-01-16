@@ -97,6 +97,7 @@ public:
 
 private:
     void assignValueAfterChecks(Variable* var, std::string reg);
+    std::string getRegisterWithAddress(Variable* var);
 
     void setConstValue(Variable* var);
     void setRegisterValue(std::string reg, uint value);

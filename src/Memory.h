@@ -33,6 +33,7 @@ public:
     std::pair<std::string, bool> getFreeRegister(Variable* var);
     void freeRegister(std::string reg, int value);
 
+    void resetRegistersValue();
     void assertFreeRegisters();
 
 private:

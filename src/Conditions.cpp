@@ -1,6 +1,8 @@
 #include "CodeGenerator.h"
 
 Condition CodeGenerator::Conditions::equal(Variable* var1, Variable* var2) {
+    this->codeGen.memory->resetRegistersValue();
+
     uint beforeCondPtr = this->codeGen.commands.size();
     Command* falseJump = new Command(JUMP, "");
 
@@ -46,6 +48,8 @@ Condition CodeGenerator::Conditions::notEqual(Variable* var1, Variable* var2) {
 }
 
 Condition CodeGenerator::Conditions::less(Variable* var1, Variable* var2) {
+    this->codeGen.memory->resetRegistersValue();
+
     uint beforeCondPtr = this->codeGen.commands.size();
     Command* falseJump = new Command(JUMP, "");
 
@@ -78,6 +82,8 @@ Condition CodeGenerator::Conditions::less(Variable* var1, Variable* var2) {
 }
 
 Condition CodeGenerator::Conditions::lessOrEqual(Variable* var1, Variable* var2) {
+    this->codeGen.memory->resetRegistersValue();
+
     uint beforeCondPtr = this->codeGen.commands.size();
     Command* falseJump = new Command(JUMP, "");
 

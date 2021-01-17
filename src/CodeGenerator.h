@@ -35,10 +35,9 @@ public:
     void readVariable(Variable* var);
     void writeVariable(Variable* var);
 
-    Variable* getConstant(uint64_t value);
-
     void assignValue(Variable* var, std::string reg);
     std::string* setVarToRegister(Variable* var);
+    Variable* getConstant(uint64_t value);
 
     void endGenerateCode();
     std::string getCode();
@@ -97,6 +96,7 @@ public:
 
 private:
     void assignValueAfterChecks(Variable* var, std::string reg);
+
     std::string getRegisterWithAddress(Variable* var);
     std::string getRegisterWithAddress(ArrayAddress* var);
     std::string getRegisterWithValue(uint64_t value);

@@ -7,8 +7,12 @@
 
 class Constant : public Variable {
 public:
-    Constant(uint64_t value, uint address);
-    uint64_t getValue();
+    Constant(uint64_t value, uint address) : Variable(std::to_string(value), address) {
+        this->value = value;
+        this->initialize();
+    }
+
+    uint64_t getValue() { return this->value; }
 
 private:
     void functionForDynamicCast() {};

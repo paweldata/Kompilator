@@ -28,37 +28,6 @@ void CodeGenerator::writeVariable(Variable* var) {
     memory->freeRegister(reg, var->getAddress());
 }
 
-Variable* CodeGenerator::getConstant(uint64_t value) {
-    Variable* constant;
-    bool isAlreadySet;
-    std::tie(constant, isAlreadySet) = this->memory->getConstant(value);
-    if (not isAlreadySet)
-        this->setConstValue(constant);
-    return constant;
-}
-
-void CodeGenerator::setConstValue(Variable* var) {
-    Constant* constant = dynamic_cast<Constant*>(var);
-    std::string regWithAddress = this->getRegisterWithAddress(var);
-    std::string regWithValue = this->getRegisterWithValue(constant->getValue());
-
-    this->commands.push_back(new Command(STORE, regWithValue + " " + regWithAddress));
-
-    memory->freeRegister(regWithValue, -1);
-    memory->freeRegister(regWithAddress, constant->getAddress());
-}
-
-void CodeGenerator::setRegisterValue(std::string reg, uint64_t value) {
-    this->commands.push_back(new Command(RESET, reg));
-    std::string binary = this->decToBin(value);
-
-    for (char c : binary) {
-        this->commands.push_back(new Command(SHL, reg));
-        if (c == '1')
-            this->commands.push_back(new Command(INC, reg));
-    }
-}
-
 void CodeGenerator::assignValue(Variable* var, std::string reg) {
     if (ArrayAddress* arrAddress = dynamic_cast<ArrayAddress*>(var)) {
         this->assignArrayValue(arrAddress, reg);
@@ -69,15 +38,6 @@ void CodeGenerator::assignValue(Variable* var, std::string reg) {
     this->assignValueAfterChecks(var, reg);
 }
 
-void CodeGenerator::assignValueAfterChecks(Variable* var, std::string reg) {
-    var->initialize();
-    std::string varReg = this->getRegisterWithAddress(var);
-    this->commands.push_back(new Command(STORE, reg + " " + varReg));
-
-    memory->freeRegister(reg, -1);
-    memory->freeRegister(varReg, var->getAddress());
-}
-
 std::string* CodeGenerator::setVarToRegister(Variable* var) {
     if (ArrayAddress* arrAddress = dynamic_cast<ArrayAddress*>(var))
         return this->setArrVarToRegister(arrAddress);
@@ -85,6 +45,15 @@ std::string* CodeGenerator::setVarToRegister(Variable* var) {
     std::string reg = this->getRegisterWithAddress(var);
     this->commands.push_back(new Command(LOAD, reg + " " + reg));
     return new std::string(reg);
+}
+
+Variable* CodeGenerator::getConstant(uint64_t value) {
+    Variable* constant;
+    bool isAlreadySet;
+    std::tie(constant, isAlreadySet) = this->memory->getConstant(value);
+    if (not isAlreadySet)
+        this->setConstValue(constant);
+    return constant;
 }
 
 void CodeGenerator::endGenerateCode() {
@@ -99,13 +68,13 @@ std::string CodeGenerator::getCode() {
     return code;
 }
 
-std::string CodeGenerator::decToBin(uint64_t value) {
-    std::string binary;
-    while (value > 0) {
-        binary = (value % 2 == 0 ? "0" : "1") + binary;
-        value /= 2;
-    }
-    return binary;
+void CodeGenerator::assignValueAfterChecks(Variable* var, std::string reg) {
+    var->initialize();
+    std::string varReg = this->getRegisterWithAddress(var);
+    this->commands.push_back(new Command(STORE, reg + " " + varReg));
+
+    memory->freeRegister(reg, -1);
+    memory->freeRegister(varReg, var->getAddress());
 }
 
 std::string CodeGenerator::getRegisterWithAddress(Variable* var) {
@@ -139,6 +108,37 @@ std::string CodeGenerator::getRegisterWithValue(uint64_t value) {
     if (not isAlreadySet)
         this->setRegisterValue(reg, value);
     return reg;
+}
+
+void CodeGenerator::setConstValue(Variable* var) {
+    Constant* constant = dynamic_cast<Constant*>(var);
+    std::string regWithAddress = this->getRegisterWithAddress(var);
+    std::string regWithValue = this->getRegisterWithValue(constant->getValue());
+
+    this->commands.push_back(new Command(STORE, regWithValue + " " + regWithAddress));
+
+    memory->freeRegister(regWithValue, -1);
+    memory->freeRegister(regWithAddress, constant->getAddress());
+}
+
+void CodeGenerator::setRegisterValue(std::string reg, uint64_t value) {
+    this->commands.push_back(new Command(RESET, reg));
+    std::string binary = this->decToBin(value);
+
+    for (char c : binary) {
+        this->commands.push_back(new Command(SHL, reg));
+        if (c == '1')
+            this->commands.push_back(new Command(INC, reg));
+    }
+}
+
+std::string CodeGenerator::decToBin(uint64_t value) {
+    std::string binary;
+    while (value > 0) {
+        binary = (value % 2 == 0 ? "0" : "1") + binary;
+        value /= 2;
+    }
+    return binary;
 }
 
 void CodeGenerator::readArrayAddress(ArrayAddress* arr) {

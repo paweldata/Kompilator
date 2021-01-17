@@ -6,12 +6,16 @@
 
 class ArrayAddress : public Variable {
 public:
-    ArrayAddress(std::string name, uint address, Variable* index);
+    ArrayAddress(std::string name, uint arrAddress, uint elemAddress, Variable* index);
     Variable* getIndex();
+    uint getArrAddress();
+    uint getElemAddress();
 
 private:
     void functionForDynamicCast() {};
 
+    uint arrAddress;
+    uint elemAddress;
     Variable* index;
 };
 

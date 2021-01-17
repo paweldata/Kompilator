@@ -117,6 +117,21 @@ std::string CodeGenerator::getRegisterWithAddress(Variable* var) {
     return reg;
 }
 
+std::string CodeGenerator::getRegisterWithAddress(ArrayAddress* arr) {
+    Variable* var = arr->getIndex();
+
+    std::string* reg1 = this->setVarToRegister(var);
+    std::string reg2 = this->getRegisterWithValue(arr->getArrAddress());
+
+    this->commands.push_back(new Command(ADD, reg2 + " " + *reg1));
+    this->memory->freeRegister(*reg1, -1);
+    *reg1 = this->getRegisterWithValue(arr->getElemAddress());
+    this->commands.push_back(new Command(SUB, reg2 + " " + *reg1));
+
+    this->memory->freeRegister(*reg1, arr->getElemAddress());
+    return reg2;
+}
+
 std::string CodeGenerator::getRegisterWithValue(uint64_t value) {
     std::string reg;
     bool isAlreadySet;
@@ -127,68 +142,28 @@ std::string CodeGenerator::getRegisterWithValue(uint64_t value) {
 }
 
 void CodeGenerator::readArrayAddress(ArrayAddress* arr) {
-    Variable* var = arr->getIndex();
-
-    std::string regWithArrAddress = this->getRegisterWithAddress(arr);
-    std::string regWithIndexAddress =  this->getRegisterWithAddress(var);
-    std::string regWithSumAddress = this->getRegisterWithValue(0);
-
-    this->commands.push_back(new Command(LOAD, regWithSumAddress + " " + regWithIndexAddress));
-    this->commands.push_back(new Command(ADD, regWithSumAddress + " " + regWithArrAddress));
-    this->commands.push_back(new Command(GET, regWithSumAddress));
-
-    memory->freeRegister(regWithArrAddress, arr->getAddress());
-    memory->freeRegister(regWithIndexAddress, var->getAddress());
-    memory->freeRegister(regWithSumAddress, -1);
-}
-
-void CodeGenerator::writeArrayAddress(ArrayAddress* arr) {
-    Variable* var = arr->getIndex();
-
-    std::string regWithArrAddress = this->getRegisterWithAddress(arr);
-    std::string regWithIndexAddress =  this->getRegisterWithAddress(var);
-    std::string regWithSumAddress = this->getRegisterWithValue(0);
-
-    this->commands.push_back(new Command(LOAD, regWithSumAddress + " " + regWithIndexAddress));
-    this->commands.push_back(new Command(ADD, regWithSumAddress + " " + regWithArrAddress));
-    this->commands.push_back(new Command(PUT, regWithSumAddress));
-
-    memory->freeRegister(regWithArrAddress, arr->getAddress());
-    memory->freeRegister(regWithIndexAddress, var->getAddress());
-    memory->freeRegister(regWithSumAddress, -1);
-}
-
-void CodeGenerator::assignArrayValue(ArrayAddress* arr, std::string reg) {
-    Variable* var = arr->getIndex();
-
-    std::string regWithArrAddress = this->getRegisterWithAddress(arr);
-    std::string regWithIndexAddress =  this->getRegisterWithAddress(var);
-    std::string regWithSumAddress = this->getRegisterWithValue(0);
-
-    this->commands.push_back(new Command(LOAD, regWithSumAddress + " " + regWithIndexAddress));
-    this->commands.push_back(new Command(ADD, regWithSumAddress + " " + regWithArrAddress));
-    this->commands.push_back(new Command(STORE, reg + " " + regWithSumAddress));
-
-    memory->freeRegister(regWithArrAddress, arr->getAddress());
-    memory->freeRegister(regWithIndexAddress, var->getAddress());
-    memory->freeRegister(regWithSumAddress, -1);
+    std::string reg = this->getRegisterWithAddress(arr);
+    this->commands.push_back(new Command(GET, reg));
     memory->freeRegister(reg, -1);
 }
 
+void CodeGenerator::writeArrayAddress(ArrayAddress* arr) {
+    std::string reg = this->getRegisterWithAddress(arr);
+    this->commands.push_back(new Command(PUT, reg));
+    memory->freeRegister(reg, -1);
+}
+
+void CodeGenerator::assignArrayValue(ArrayAddress* arr, std::string reg) {
+    std::string reg2 = this->getRegisterWithAddress(arr);
+    this->commands.push_back(new Command(STORE, reg + " " + reg2));
+    memory->freeRegister(reg, -1);
+    memory->freeRegister(reg2, -1);
+}
+
 std::string* CodeGenerator::setArrVarToRegister(ArrayAddress* arr) {
-    Variable* var = arr->getIndex();
-
-    std::string regWithArrAddress = this->getRegisterWithAddress(arr);
-    std::string regWithIndexAddress =  this->getRegisterWithAddress(var);
-    std::string regWithSumAddress = this->getRegisterWithValue(0);
-
-    this->commands.push_back(new Command(LOAD, regWithSumAddress + " " + regWithIndexAddress));
-    this->commands.push_back(new Command(ADD, regWithSumAddress + " " + regWithArrAddress));
-    this->commands.push_back(new Command(LOAD, regWithSumAddress + " " + regWithSumAddress));
-
-    memory->freeRegister(regWithArrAddress, arr->getAddress());
-    memory->freeRegister(regWithIndexAddress, var->getAddress());
-    return new std::string(regWithSumAddress);
+    std::string reg = this->getRegisterWithAddress(arr);
+    this->commands.push_back(new Command(LOAD, reg + " " + reg));
+    return new std::string(reg);
 }
 
 void CodeGenerator::checkIfTryModifyIterator(Variable* var) {

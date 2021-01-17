@@ -98,6 +98,7 @@ public:
 private:
     void assignValueAfterChecks(Variable* var, std::string reg);
     std::string getRegisterWithAddress(Variable* var);
+    std::string getRegisterWithAddress(ArrayAddress* var);
     std::string getRegisterWithValue(uint64_t value);
 
     void setConstValue(Variable* var);

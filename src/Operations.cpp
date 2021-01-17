@@ -27,19 +27,31 @@ std::string* CodeGenerator::Operations::mul(Variable* var1, Variable* var2) {
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
     std::string resultReg = this->codeGen.getRegisterWithValue(0);
 
-    std::string jzeroParam = *reg2 + " 7";
-    std::string joddParam = *reg2 + " 2";
-    std::string addParam = resultReg + " " + *reg1;
+    // find lower number
+    this->codeGen.commands.push_back(new Command(ADD, resultReg + " " + *reg1));
+    this->codeGen.commands.push_back(new Command(SUB, resultReg + " " + *reg2));
+    this->codeGen.commands.push_back(new Command(JZERO, resultReg + " 9"));
 
-    this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
-    this->codeGen.commands.push_back(new Command(JODD, joddParam));
+    // var1 > var2
+    this->codeGen.commands.push_back(new Command(RESET, resultReg));
+    this->codeGen.commands.push_back(new Command(JZERO, *reg2 + " 14"));
+    this->codeGen.commands.push_back(new Command(JODD, *reg2 + " 2"));
     this->codeGen.commands.push_back(new Command(JUMP, "2"));
-    this->codeGen.commands.push_back(new Command(ADD, addParam));
+    this->codeGen.commands.push_back(new Command(ADD, resultReg + " " + *reg1));
     this->codeGen.commands.push_back(new Command(SHL, *reg1));
     this->codeGen.commands.push_back(new Command(SHR, *reg2));
     this->codeGen.commands.push_back(new Command(JUMP, "-6"));
 
-    this->codeGen.memory->freeRegister(*reg2, 0);
+    // var1 <= var2
+    this->codeGen.commands.push_back(new Command(JZERO, *reg1 + " 7"));
+    this->codeGen.commands.push_back(new Command(JODD, *reg1 + " 2"));
+    this->codeGen.commands.push_back(new Command(JUMP, "2"));
+    this->codeGen.commands.push_back(new Command(ADD, resultReg + " " + *reg2));
+    this->codeGen.commands.push_back(new Command(SHL, *reg2));
+    this->codeGen.commands.push_back(new Command(SHR, *reg1));
+    this->codeGen.commands.push_back(new Command(JUMP, "-6"));
+
+    this->codeGen.memory->freeRegister(*reg2, -1);
     this->codeGen.memory->freeRegister(*reg1, -1);
     return new std::string(resultReg);
 }
@@ -118,7 +130,7 @@ std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
     // a % b = a - (b * int(a/b))
     std::string* reg1 = this->div(var1, var2);
     std::string *reg2 = this->codeGen.setVarToRegister(var2);
-    std::string mulResultReg = this->codeGen.memory->getFreeRegister();
+    std::string mulResultReg = this->codeGen.getRegisterWithValue(0);
 
     std::string checkZero = *reg2 + " 2";
     Command* jump = new Command(JUMP, "");
@@ -131,17 +143,29 @@ std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(jump);
 
     uint jumpPtr = this->codeGen.commands.size();
-    std::string jzeroParam = *reg2 + " 7";
-    std::string joddParam = *reg2 + " 2";
-    std::string addParam = mulResultReg + " " + *reg1;
 
+    // find lower number
+    this->codeGen.commands.push_back(new Command(ADD, mulResultReg + " " + *reg1));
+    this->codeGen.commands.push_back(new Command(SUB, mulResultReg + " " + *reg2));
+    this->codeGen.commands.push_back(new Command(JZERO, mulResultReg + " 9"));
+
+    // var1 > var2
     this->codeGen.commands.push_back(new Command(RESET, mulResultReg));
-    this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
-    this->codeGen.commands.push_back(new Command(JODD, joddParam));
+    this->codeGen.commands.push_back(new Command(JZERO, *reg2 + " 14"));
+    this->codeGen.commands.push_back(new Command(JODD, *reg2 + " 2"));
     this->codeGen.commands.push_back(new Command(JUMP, "2"));
-    this->codeGen.commands.push_back(new Command(ADD, addParam));
+    this->codeGen.commands.push_back(new Command(ADD, mulResultReg + " " + *reg1));
     this->codeGen.commands.push_back(new Command(SHL, *reg1));
     this->codeGen.commands.push_back(new Command(SHR, *reg2));
+    this->codeGen.commands.push_back(new Command(JUMP, "-6"));
+
+    // var1 <= var2
+    this->codeGen.commands.push_back(new Command(JZERO, *reg1 + " 7"));
+    this->codeGen.commands.push_back(new Command(JODD, *reg1 + " 2"));
+    this->codeGen.commands.push_back(new Command(JUMP, "2"));
+    this->codeGen.commands.push_back(new Command(ADD, mulResultReg + " " + *reg2));
+    this->codeGen.commands.push_back(new Command(SHL, *reg2));
+    this->codeGen.commands.push_back(new Command(SHR, *reg1));
     this->codeGen.commands.push_back(new Command(JUMP, "-6"));
 
     this->codeGen.memory->freeRegister(*reg1, -1);

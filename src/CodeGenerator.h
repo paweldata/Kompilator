@@ -35,7 +35,7 @@ public:
     void readVariable(Variable* var);
     void writeVariable(Variable* var);
 
-    Variable* getConstant(uint value);
+    Variable* getConstant(uint64_t value);
 
     void assignValue(Variable* var, std::string reg);
     std::string* setVarToRegister(Variable* var);
@@ -98,11 +98,11 @@ public:
 private:
     void assignValueAfterChecks(Variable* var, std::string reg);
     std::string getRegisterWithAddress(Variable* var);
-    std::string getRegisterWithValue(uint value);
+    std::string getRegisterWithValue(uint64_t value);
 
     void setConstValue(Variable* var);
-    void setRegisterValue(std::string reg, uint value);
-    std::string decToBin(uint value);
+    void setRegisterValue(std::string reg, uint64_t value);
+    std::string decToBin(uint64_t value);
 
     void readArrayAddress(ArrayAddress* arr);
     void writeArrayAddress(ArrayAddress* arr);

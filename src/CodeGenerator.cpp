@@ -28,7 +28,7 @@ void CodeGenerator::writeVariable(Variable* var) {
     memory->freeRegister(reg, var->getAddress());
 }
 
-Variable* CodeGenerator::getConstant(uint value) {
+Variable* CodeGenerator::getConstant(uint64_t value) {
     Variable* constant;
     bool isAlreadySet;
     std::tie(constant, isAlreadySet) = this->memory->getConstant(value);
@@ -48,7 +48,7 @@ void CodeGenerator::setConstValue(Variable* var) {
     memory->freeRegister(regWithAddress, constant->getAddress());
 }
 
-void CodeGenerator::setRegisterValue(std::string reg, uint value) {
+void CodeGenerator::setRegisterValue(std::string reg, uint64_t value) {
     this->commands.push_back(new Command(RESET, reg));
     std::string binary = this->decToBin(value);
 
@@ -99,7 +99,7 @@ std::string CodeGenerator::getCode() {
     return code;
 }
 
-std::string CodeGenerator::decToBin(uint value) {
+std::string CodeGenerator::decToBin(uint64_t value) {
     std::string binary;
     while (value > 0) {
         binary = (value % 2 == 0 ? "0" : "1") + binary;
@@ -117,7 +117,7 @@ std::string CodeGenerator::getRegisterWithAddress(Variable* var) {
     return reg;
 }
 
-std::string CodeGenerator::getRegisterWithValue(uint value) {
+std::string CodeGenerator::getRegisterWithValue(uint64_t value) {
     std::string reg;
     bool isAlreadySet;
     std::tie(reg, isAlreadySet) = this->memory->getFreeRegister(value);

@@ -36,7 +36,7 @@ Variable* Memory::getArrayVariable(std::string name, std::string index) {
     throw (std::string) var->getName() + " is not an array";
 }
 
-std::pair<Variable*, bool> Memory::getConstant(uint value) {
+std::pair<Variable*, bool> Memory::getConstant(uint64_t value) {
     for (Constant* constant : this->constants)
         if (constant->getValue() == value)
             return std::make_pair(constant, true);
@@ -83,7 +83,7 @@ std::string Memory::getFreeRegister() {
     throw "Error: there is no free register";
 }
 
-std::pair<std::string, bool> Memory::getFreeRegister(uint value) {
+std::pair<std::string, bool> Memory::getFreeRegister(uint64_t value) {
     for (int i = 0; i < REGISTERSNUMBER; i++) {
         if (not this->registers[i].isUsed and this->registers[i].value == value) {
             this->registers[i].isUsed = true;

@@ -15,7 +15,7 @@ void yyerror(std::string error);
 %}
 
 %union {
-    uint num;
+    uint64_t num;
     std::string* str;
     Variable* var;
     Condition cond;

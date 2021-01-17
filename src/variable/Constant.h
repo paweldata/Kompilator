@@ -7,13 +7,13 @@
 
 class Constant : public Variable {
 public:
-    Constant(uint value, uint address);
-    uint getValue();
+    Constant(uint64_t value, uint address);
+    uint64_t getValue();
 
 private:
     void functionForDynamicCast() {};
 
-    uint value;
+    uint64_t value;
 };
 
 #endif //CONSTANT_H

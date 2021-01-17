@@ -12,7 +12,7 @@
 constexpr uint REGISTERSNUMBER = 6;
 
 struct Register {
-    int value;
+    int64_t value;
     bool isUsed;
 };
 
@@ -22,7 +22,7 @@ public:
     Variable* getVariable(std::string name);
     Variable* getArrayVariable(std::string name, uint index);
     Variable* getArrayVariable(std::string name, std::string index);
-    std::pair<Variable*, bool> getConstant(uint value);
+    std::pair<Variable*, bool> getConstant(uint64_t value);
 
     void setVariable(std::string name);
     void setArray(std::string name, uint start, uint end);
@@ -30,7 +30,7 @@ public:
     void deleteIterator(Iterator* it);
 
     std::string getFreeRegister();
-    std::pair<std::string, bool> getFreeRegister(uint value);
+    std::pair<std::string, bool> getFreeRegister(uint64_t value);
     std::pair<std::string, bool> getFreeRegister(Variable* var);
     void freeRegister(std::string reg, int value);
 

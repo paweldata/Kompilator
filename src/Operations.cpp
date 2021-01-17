@@ -25,13 +25,12 @@ std::string* CodeGenerator::Operations::sub(Variable* var1, Variable* var2) {
 std::string* CodeGenerator::Operations::mul(Variable* var1, Variable* var2) {
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
-    std::string resultReg = this->codeGen.memory->getFreeRegister();
+    std::string resultReg = this->codeGen.getRegisterWithValue(0);
 
     std::string jzeroParam = *reg2 + " 7";
     std::string joddParam = *reg2 + " 2";
     std::string addParam = resultReg + " " + *reg1;
 
-    this->codeGen.commands.push_back(new Command(RESET, resultReg));
     this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
     this->codeGen.commands.push_back(new Command(JODD, joddParam));
     this->codeGen.commands.push_back(new Command(JUMP, "2"));
@@ -40,19 +39,18 @@ std::string* CodeGenerator::Operations::mul(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(new Command(SHR, *reg2));
     this->codeGen.commands.push_back(new Command(JUMP, "-6"));
 
-    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(*reg2, 0);
     this->codeGen.memory->freeRegister(*reg1, -1);
     return new std::string(resultReg);
 }
 
 std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
-    std::string counterReg = this->codeGen.memory->getFreeRegister();
-    std::string reg1 = this->codeGen.memory->getFreeRegister();
+    std::string counterReg = this->codeGen.getRegisterWithValue(0);
+    std::string reg1 = this->codeGen.getRegisterWithValue(0);
     std::string* reg2 = this->codeGen.setVarToRegister(var1);
-    std::string resultReg = this->codeGen.memory->getFreeRegister();
-
-    this->codeGen.commands.push_back(new Command(RESET, counterReg));
-    this->codeGen.commands.push_back(new Command(RESET, reg1));
+    std::string resultReg = this->codeGen.getRegisterWithValue(0);
+    std::string tempSumReg = this->codeGen.getRegisterWithValue(0);
+    std::string checkReg = this->codeGen.memory->getFreeRegister();
 
     std::string jzeroParam = *reg2 + " 8";
     std::string joddParam = *reg2 + " 2";
@@ -75,15 +73,8 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
 
     // if var2 == 0, return 0
     this->codeGen.commands.push_back(new Command(JZERO, checkZero));
-    this->codeGen.commands.push_back(new Command(JUMP, "3"));
-    this->codeGen.commands.push_back(new Command(RESET, resultReg));
-    this->codeGen.commands.push_back(new Command(JUMP, "19"));
-
-    std::string tempSumReg = this->codeGen.memory->getFreeRegister();
-    std::string checkReg = this->codeGen.memory->getFreeRegister();
-
-    this->codeGen.commands.push_back(new Command(RESET, tempSumReg));
-    this->codeGen.commands.push_back(new Command(RESET, resultReg));
+    this->codeGen.commands.push_back(new Command(JUMP, "2"));
+    this->codeGen.commands.push_back(new Command(JUMP, "17"));
 
     std::string jzeroParam1 = counterReg + " 16";
     joddParam = reg1 + " 2";

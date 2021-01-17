@@ -83,13 +83,9 @@ std::string Memory::getFreeRegister() {
     throw "Error: there is no free register";
 }
 
-std::pair<std::string, bool> Memory::getFreeRegister(Variable* var) {
-    if (auto arrAddr = dynamic_cast<ArrayAddress*>(var)) {
-        return std::make_pair(this->getFreeRegister(), false);
-    }
-
+std::pair<std::string, bool> Memory::getFreeRegister(uint value) {
     for (int i = 0; i < REGISTERSNUMBER; i++) {
-        if (not this->registers[i].isUsed and this->registers[i].value == var->getAddress()) {
+        if (not this->registers[i].isUsed and this->registers[i].value == value) {
             this->registers[i].isUsed = true;
             this->lastSentRegNumber = i;
             return std::make_pair(std::string(1, (char)('a' + i)), true);
@@ -97,6 +93,13 @@ std::pair<std::string, bool> Memory::getFreeRegister(Variable* var) {
     }
 
     return std::make_pair(this->getFreeRegister(), false);
+}
+
+std::pair<std::string, bool> Memory::getFreeRegister(Variable* var) {
+    if (auto arrAddr = dynamic_cast<ArrayAddress*>(var)) {
+        return std::make_pair(this->getFreeRegister(), false);
+    }
+    return this->getFreeRegister(var->getAddress());
 }
 
 void Memory::freeRegister(std::string reg, int value) {

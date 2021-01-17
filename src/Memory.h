@@ -30,6 +30,7 @@ public:
     void deleteIterator(Iterator* it);
 
     std::string getFreeRegister();
+    std::pair<std::string, bool> getFreeRegister(uint value);
     std::pair<std::string, bool> getFreeRegister(Variable* var);
     void freeRegister(std::string reg, int value);
 

@@ -80,7 +80,7 @@ std::string Memory::getFreeRegister() {
             return std::string(1, (char)('a' + regNumber));
         }
     }
-    throw "Error: there is no free register";
+    throw (std::string) "Error: there is no free register";
 }
 
 std::pair<std::string, bool> Memory::getFreeRegister(uint64_t value) {

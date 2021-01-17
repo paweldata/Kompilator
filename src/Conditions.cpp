@@ -1,18 +1,19 @@
 #include "CodeGenerator.h"
 
 Condition CodeGenerator::Conditions::equal(Variable* var1, Variable* var2) {
+    this->codeGen.memory->resetRegistersValue();
+
     uint beforeCondPtr = this->codeGen.commands.size();
     Command* falseJump = new Command(JUMP, "");
 
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
-    std::string checkReg = this->codeGen.memory->getFreeRegister();
+    std::string checkReg = this->codeGen.getRegisterWithValue(0);
 
     std::string var1Param = checkReg + " " + *reg1;
     std::string var2Param = checkReg + " " + *reg2;
     std::string jzeroParam = checkReg + " 2";
 
-    this->codeGen.commands.push_back(new Command(RESET, checkReg));
     this->codeGen.commands.push_back(new Command(ADD, var1Param));
     this->codeGen.commands.push_back(new Command(SUB, var2Param));
     this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
@@ -28,9 +29,9 @@ Condition CodeGenerator::Conditions::equal(Variable* var1, Variable* var2) {
         .afterCondPtr = afterCondPtr,
         .falseJump = falseJump};
 
-    this->codeGen.memory->freeRegister(*reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(*reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
 
     return cond;
 }
@@ -46,18 +47,19 @@ Condition CodeGenerator::Conditions::notEqual(Variable* var1, Variable* var2) {
 }
 
 Condition CodeGenerator::Conditions::less(Variable* var1, Variable* var2) {
+    this->codeGen.memory->resetRegistersValue();
+
     uint beforeCondPtr = this->codeGen.commands.size();
     Command* falseJump = new Command(JUMP, "");
 
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
-    std::string checkReg = this->codeGen.memory->getFreeRegister();
+    std::string checkReg = this->codeGen.getRegisterWithValue(0);
 
     std::string var1Param = checkReg + " " + *reg1;
     std::string var2Param = checkReg + " " + *reg2;
     std::string jzeroParam = checkReg + " 2";
 
-    this->codeGen.commands.push_back(new Command(RESET, checkReg));
     this->codeGen.commands.push_back(new Command(ADD, var2Param));
     this->codeGen.commands.push_back(new Command(SUB, var1Param));
     this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
@@ -70,26 +72,27 @@ Condition CodeGenerator::Conditions::less(Variable* var1, Variable* var2) {
         .afterCondPtr = afterCondPtr,
         .falseJump = falseJump};
 
-    this->codeGen.memory->freeRegister(*reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(*reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
 
     return cond;
 }
 
 Condition CodeGenerator::Conditions::lessOrEqual(Variable* var1, Variable* var2) {
+    this->codeGen.memory->resetRegistersValue();
+
     uint beforeCondPtr = this->codeGen.commands.size();
     Command* falseJump = new Command(JUMP, "");
 
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
-    std::string checkReg = this->codeGen.memory->getFreeRegister();
+    std::string checkReg = this->codeGen.getRegisterWithValue(0);
 
     std::string var1Param = checkReg + " " + *reg1;
     std::string var2Param = checkReg + " " + *reg2;
     std::string jzeroParam = checkReg + " 2";
 
-    this->codeGen.commands.push_back(new Command(RESET, checkReg));
     this->codeGen.commands.push_back(new Command(ADD, var1Param));
     this->codeGen.commands.push_back(new Command(SUB, var2Param));
     this->codeGen.commands.push_back(new Command(JZERO, jzeroParam));
@@ -101,9 +104,9 @@ Condition CodeGenerator::Conditions::lessOrEqual(Variable* var1, Variable* var2)
         .afterCondPtr = afterCondPtr,
         .falseJump = falseJump};
 
-    this->codeGen.memory->freeRegister(*reg1);
-    this->codeGen.memory->freeRegister(*reg2);
-    this->codeGen.memory->freeRegister(checkReg);
+    this->codeGen.memory->freeRegister(*reg1, -1);
+    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(checkReg, -1);
 
     return cond;
 }

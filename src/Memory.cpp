@@ -8,7 +8,6 @@
 Memory::Memory() {
     this->variables = std::map<std::string, Variable*>();
     this->registers = std::vector<Register>(REGISTERSNUMBER, Register{-1, false});
-    this->freeMemPtr = 0;
 }
 
 Variable* Memory::getVariable(std::string name) {
@@ -37,7 +36,7 @@ Variable* Memory::getArrayVariable(std::string name, std::string index) {
     throw (std::string) var->getName() + " is not an array";
 }
 
-std::pair<Variable*, bool> Memory::getConstant(uint value) {
+std::pair<Variable*, bool> Memory::getConstant(uint64_t value) {
     for (Constant* constant : this->constants)
         if (constant->getValue() == value)
             return std::make_pair(constant, true);
@@ -73,19 +72,48 @@ void Memory::deleteIterator(Iterator* it) {
 }
 
 std::string Memory::getFreeRegister() {
-    for (int i = 0; i < REGISTERSNUMBER; i++)
-        if (not this->registers[i].isUsed) {
-            this->registers[i].isUsed = true;
-            return std::string(1, (char)('a' + i));
+    for (int i = 0; i < REGISTERSNUMBER; i++) {
+        uint regNumber = (i + this->lastSentRegNumber + 1) % REGISTERSNUMBER;
+        if (not this->registers[regNumber].isUsed) {
+            this->registers[regNumber].isUsed = true;
+            this->lastSentRegNumber = regNumber;
+            return std::string(1, (char)('a' + regNumber));
         }
-    throw "Error: there is no free register";
+    }
+    throw (std::string) "Error: there is no free register";
 }
 
-void Memory::freeRegister(std::string reg) {
+std::pair<std::string, bool> Memory::getFreeRegister(uint64_t value) {
+    for (int i = 0; i < REGISTERSNUMBER; i++) {
+        if (not this->registers[i].isUsed and this->registers[i].value == value) {
+            this->registers[i].isUsed = true;
+            this->lastSentRegNumber = i;
+            return std::make_pair(std::string(1, (char)('a' + i)), true);
+        }
+    }
+
+    return std::make_pair(this->getFreeRegister(), false);
+}
+
+std::pair<std::string, bool> Memory::getFreeRegister(Variable* var) {
+    if (auto arrAddr = dynamic_cast<ArrayAddress*>(var)) {
+        return std::make_pair(this->getFreeRegister(), false);
+    }
+    return this->getFreeRegister(var->getAddress());
+}
+
+void Memory::freeRegister(std::string reg, int value) {
     uint regNumber = (uint)(reg[0] - 'a');
     assert(regNumber < REGISTERSNUMBER);
     assert(this->registers[regNumber].isUsed);
+
+    this->registers[regNumber].value = value;
     this->registers[regNumber].isUsed = false;
+}
+
+void Memory::resetRegistersValue() {
+    for (Register& reg : this->registers)
+        reg.value = -1;
 }
 
 void Memory::assertFreeRegisters() {

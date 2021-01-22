@@ -48,11 +48,8 @@ std::string* CodeGenerator::setVarToRegister(Variable* var) {
 }
 
 Variable* CodeGenerator::getConstant(uint64_t value) {
-    Variable* constant;
-    bool isAlreadySet;
-    std::tie(constant, isAlreadySet) = this->memory->getConstant(value);
-    if (not isAlreadySet)
-        this->setConstValue(constant);
+    Variable* constant = this->memory->getConstant(value);
+    this->setConstValue(constant);
     return constant;
 }
 
@@ -117,7 +114,7 @@ void CodeGenerator::setConstValue(Variable* var) {
 
     this->commands.push_back(new Command(STORE, regWithValue + " " + regWithAddress));
 
-    memory->freeRegister(regWithValue, -1);
+    memory->freeRegister(regWithValue, constant->getValue());
     memory->freeRegister(regWithAddress, constant->getAddress());
 }
 

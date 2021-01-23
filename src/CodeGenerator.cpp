@@ -122,6 +122,12 @@ void CodeGenerator::setRegisterValue(std::string reg, uint64_t value) {
     this->commands.push_back(new Command(RESET, reg));
     std::string binary = this->decToBin(value);
 
+    if (binary == "")
+        return;
+
+    this->commands.push_back(new Command(INC, reg));
+    binary.erase(0, 1);
+
     for (char c : binary) {
         this->commands.push_back(new Command(SHL, reg));
         if (c == '1')

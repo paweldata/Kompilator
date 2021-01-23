@@ -68,7 +68,7 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     this->codeGen.commands.push_back(new Command(JUMP, "-7"));
     // end first loop
 
-    this->codeGen.memory->freeRegister(*reg2, -1);
+    this->codeGen.memory->freeRegister(*reg2, 0);
     reg2 = this->codeGen.setVarToRegister(var2);
 
     std::string resultReg = this->codeGen.getRegisterWithValue(0);

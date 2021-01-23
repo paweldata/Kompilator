@@ -51,6 +51,9 @@ public:
         std::string* mod(Variable* var1, Variable* var2);
 
     private:
+        std::string* mulOneConstant(Constant* constant, Variable* var);
+        std::string* divideByConstant(Constant* constant, Variable* var);
+
         CodeGenerator& codeGen;
     };
 

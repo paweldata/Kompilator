@@ -1,6 +1,13 @@
 #include "CodeGenerator.h"
 
 std::string* CodeGenerator::Operations::add(Variable* var1, Variable* var2) {
+    if (auto constant1 = dynamic_cast<Constant*>(var1)) {
+        if (auto constant2 = dynamic_cast<Constant*>(var2)) {
+            uint64_t result = constant1->getValue() + constant2->getValue();
+            return new std::string(this->codeGen.getRegisterWithValue(result));
+        }
+    }
+
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
 
@@ -10,6 +17,13 @@ std::string* CodeGenerator::Operations::add(Variable* var1, Variable* var2) {
 }
 
 std::string* CodeGenerator::Operations::sub(Variable* var1, Variable* var2) {
+    if (auto constant1 = dynamic_cast<Constant*>(var1)) {
+        if (auto constant2 = dynamic_cast<Constant*>(var2)) {
+            uint64_t result = std::max((int64_t)(constant1->getValue() - constant2->getValue()), 0l);
+            return new std::string(this->codeGen.getRegisterWithValue(result));
+        }
+    }
+
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
 
@@ -19,6 +33,23 @@ std::string* CodeGenerator::Operations::sub(Variable* var1, Variable* var2) {
 }
 
 std::string* CodeGenerator::Operations::mul(Variable* var1, Variable* var2) {
+    if (auto constant1 = dynamic_cast<Constant*>(var1)) {
+        if (auto constant2 = dynamic_cast<Constant*>(var2)) {
+            uint64_t result = constant1->getValue() * constant2->getValue();
+            return new std::string(this->codeGen.getRegisterWithValue(result));
+        }
+
+        std::string* possibleResult = this->mulOneConstant(constant1, var2);
+        if (*possibleResult != "")
+            return possibleResult;
+    }
+
+    if (auto constant2 = dynamic_cast<Constant*>(var2)) {
+        std::string* possibleResult = this->mulOneConstant(constant2, var1);
+        if (*possibleResult != "")
+            return possibleResult;
+    }
+
     std::string* reg1 = this->codeGen.setVarToRegister(var1);
     std::string* reg2 = this->codeGen.setVarToRegister(var2);
     std::string resultReg = this->codeGen.getRegisterWithValue(0);
@@ -52,7 +83,33 @@ std::string* CodeGenerator::Operations::mul(Variable* var1, Variable* var2) {
     return new std::string(resultReg);
 }
 
+std::string* CodeGenerator::Operations::mulOneConstant(Constant* constant, Variable* var) {
+    switch (constant->getValue()) {
+    case 0:
+        return new std::string(this->codeGen.getRegisterWithValue(0));
+    case 1:
+        return this->codeGen.setVarToRegister(var);
+    case 2:
+        std::string* reg = this->codeGen.setVarToRegister(var);
+        this->codeGen.commands.push_back(new Command(SHL, *reg));
+        return reg;
+    }
+
+    return new std::string("");
+}
+
 std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
+    if (auto constant2 = dynamic_cast<Constant*>(var2)) {
+        if (auto constant1 = dynamic_cast<Constant*>(var1)) {
+            uint64_t result = (constant2->getValue() == 0) ? 0 : constant1->getValue() / constant2->getValue();
+            return new std::string(this->codeGen.getRegisterWithValue(result));
+        }
+
+        std::string* possibleResult = this->divideByConstant(constant2, var1);
+        if (*possibleResult != "")
+            return possibleResult;
+    }
+
     std::string counterReg = this->codeGen.getRegisterWithValue(0);
     std::string reg1 = this->codeGen.getRegisterWithValue(0);
     std::string* reg2 = this->codeGen.setVarToRegister(var1);
@@ -108,6 +165,21 @@ std::string* CodeGenerator::Operations::div(Variable* var1, Variable* var2) {
     this->codeGen.memory->freeRegister(tempSumReg, -1);
     this->codeGen.memory->freeRegister(checkReg, -1);
     return new std::string(resultReg);
+}
+
+std::string* CodeGenerator::Operations::divideByConstant(Constant* constant, Variable* var) {
+    switch (constant->getValue()) {
+    case 0:
+        return new std::string(this->codeGen.getRegisterWithValue(0));
+    case 1:
+        return this->codeGen.setVarToRegister(var);
+    case 2:
+        std::string* reg = this->codeGen.setVarToRegister(var);
+        this->codeGen.commands.push_back(new Command(SHR, *reg));
+        return reg;
+    }
+
+    return new std::string("");
 }
 
 std::string* CodeGenerator::Operations::mod(Variable* var1, Variable* var2) {

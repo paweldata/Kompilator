@@ -19,8 +19,12 @@ void CodeGenerator::readVariable(Variable* var) {
 }
 
 void CodeGenerator::writeVariable(Variable* var) {
-    if (ArrayAddress* arrAddress = dynamic_cast<ArrayAddress*>(var)) {
+    if (auto arrAddress = dynamic_cast<ArrayAddress*>(var)) {
         this->writeArrayAddress(arrAddress);
+        return;
+    }
+    if (auto constant = dynamic_cast<Constant*>(var)) {
+        this->writeConstant(constant);
         return;
     }
     std::string reg = this->getRegisterWithAddress(var);
@@ -41,16 +45,12 @@ void CodeGenerator::assignValue(Variable* var, std::string reg) {
 std::string* CodeGenerator::setVarToRegister(Variable* var) {
     if (ArrayAddress* arrAddress = dynamic_cast<ArrayAddress*>(var))
         return this->setArrVarToRegister(arrAddress);
+    if (auto constant = dynamic_cast<Constant*>(var))
+        return new std::string(this->getRegisterWithValue(constant->getValue()));
 
     std::string reg = this->getRegisterWithAddress(var);
     this->commands.push_back(new Command(LOAD, reg + " " + reg));
     return new std::string(reg);
-}
-
-Variable* CodeGenerator::getConstant(uint64_t value) {
-    Variable* constant = this->memory->getConstant(value);
-    this->setConstValue(constant);
-    return constant;
 }
 
 void CodeGenerator::endGenerateCode() {
@@ -72,6 +72,17 @@ void CodeGenerator::assignValueAfterChecks(Variable* var, std::string reg) {
 
     memory->freeRegister(reg, -1);
     memory->freeRegister(varReg, var->getAddress());
+}
+
+void CodeGenerator::writeConstant(Constant* constant) {
+    std::string regValue = this->getRegisterWithValue(constant->getValue());
+    std::string regAddress = this->getRegisterWithValue(0);
+
+    this->commands.push_back(new Command(STORE, regValue + " " + regAddress));
+    this->commands.push_back(new Command(PUT, regAddress));
+
+    memory->freeRegister(regValue, constant->getValue());
+    memory->freeRegister(regAddress, 0);
 }
 
 std::string CodeGenerator::getRegisterWithAddress(Variable* var) {
@@ -105,17 +116,6 @@ std::string CodeGenerator::getRegisterWithValue(uint64_t value) {
     if (not isAlreadySet)
         this->setRegisterValue(reg, value);
     return reg;
-}
-
-void CodeGenerator::setConstValue(Variable* var) {
-    Constant* constant = dynamic_cast<Constant*>(var);
-    std::string regWithAddress = this->getRegisterWithAddress(var);
-    std::string regWithValue = this->getRegisterWithValue(constant->getValue());
-
-    this->commands.push_back(new Command(STORE, regWithValue + " " + regWithAddress));
-
-    memory->freeRegister(regWithValue, constant->getValue());
-    memory->freeRegister(regWithAddress, constant->getAddress());
 }
 
 void CodeGenerator::setRegisterValue(std::string reg, uint64_t value) {

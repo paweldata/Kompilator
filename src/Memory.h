@@ -44,9 +44,8 @@ private:
     void checkArraySize(uint start, uint end);
 
     std::map<std::string, Variable*> variables;
-    std::vector<Constant*> constants;
     std::vector<Register> registers;
-    uint freeMemPtr{0};
+    uint freeMemPtr{1};
     uint lastSentRegNumber{5};
 };
 

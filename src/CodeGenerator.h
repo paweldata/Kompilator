@@ -37,7 +37,6 @@ public:
 
     void assignValue(Variable* var, std::string reg);
     std::string* setVarToRegister(Variable* var);
-    Variable* getConstant(uint64_t value);
 
     void endGenerateCode();
     std::string getCode();
@@ -52,6 +51,9 @@ public:
         std::string* mod(Variable* var1, Variable* var2);
 
     private:
+        std::string* mulOneConstant(Constant* constant, Variable* var);
+        std::string* divideByConstant(Constant* constant, Variable* var);
+
         CodeGenerator& codeGen;
     };
 
@@ -97,11 +99,12 @@ public:
 private:
     void assignValueAfterChecks(Variable* var, std::string reg);
 
+    void writeConstant(Constant* constant);
+
     std::string getRegisterWithAddress(Variable* var);
     std::string getRegisterWithAddress(ArrayAddress* var);
     std::string getRegisterWithValue(uint64_t value);
 
-    void setConstValue(Variable* var);
     void setRegisterValue(std::string reg, uint64_t value);
     std::string decToBin(uint64_t value);
 

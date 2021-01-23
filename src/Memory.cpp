@@ -37,10 +37,7 @@ Variable* Memory::getArrayVariable(std::string name, std::string index) {
 }
 
 Variable* Memory::getConstant(uint64_t value) {
-    Constant* constant = new Constant(value, this->freeMemPtr);
-    this->freeMemPtr++;
-    this->constants.push_back(constant);
-    return constant;
+    return new Constant(value, 0);
 }
 
 void Memory::setVariable(std::string name) {
